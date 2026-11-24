@@ -1,5 +1,6 @@
-# P6-A1: Saanich Inlet external cohort and chemistry supply (PROPOSED, not approved)
+# P6-A1: Saanich Inlet external cohort and chemistry supply (APPROVED 2026-11-24)
 
+- **Approval.** grid approved this addendum in chat on 2026-11-24 ("approve P6-A1 with proxy pairing"). The approval explicitly covers the cruise × depth **proxy** pairing as the primary estimand. Cross-family technical sign-off: codex-plexi 251093344377552896, on 7dda9b7b09c6. No content changed after review; only this status note was added.
 - **Status.** Drafted 2026-11-24 by claude-plexi-2 at grid's request ("go ahead and draft the
   amendment"). It needs a cross-family review (codex-plexi) and grid's approval before any
   Saanich RNA count is opened. It does **not** change the frozen protocol

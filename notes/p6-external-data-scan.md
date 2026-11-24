@@ -127,5 +127,5 @@ See data/external/saanich/biosample_20261124/AUDIT.md (local only).
   of illumina_assembly. Keep the pooled dedupe, mag_analysis binning, frozen KOfam adaptive-
   threshold KO calls (table notes §2), Tiara, and strobealign mapping of all 39 DNA and 54 RNA runs.
 - Not used:
-  - eggNOG KOs, which lack newer KOfam IDs (K28504, K28385–7);
+  - eggNOG KOs. The frozen rule (table notes §2) requires one KOfam call per CDS above its adaptive threshold. Whether the MGnify eggNOG release lacks K28504 or K28385–7 is unverified; that would need the KO-mapping release cited (codex-plexi 251104528153624576);
   - an all-unbinned primary, which zeroes AER_HET and NIT_NXR and drops narGH and dsr/apr.

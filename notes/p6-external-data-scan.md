@@ -90,3 +90,12 @@ Files are in data/external/saanich/download_20261124/hawley_supp/: MOESM151 (Tab
   - size fractions: per Hawley's Methods, metaT used 0.22 µm Sterivex with an in-line 2.7 µm GF/D prefilter; metaG has still to be confirmed as the same;
   - the repeated cruise 75 / 135 m entry (two sample IDs, one event?).
 - **Consequence:** P6 on Saanich needs P6-A1 to state how DIC/HCO3⁻, pH and DOC are supplied. Measured CO2 is not available, so this would be an assumption-driven sensitivity analysis rather than measured chemistry.
+
+## Provenance audit result (P6-A1 §1, 2026-11-24)
+See data/external/saanich/biosample_20261124/AUDIT.md (local only).
+- Table S2's metaG column is misaligned for cruises 72–74, so pairing was rebuilt from
+  BioSample titles.
+- Proxy roster: 43 events, 8 blocks (8 oxic, 8 anoxic).
+- Strict roster: 0 events; bottle and cast are undocumented.
+- Fractions are compatible (0.22–2.7 µm).
+- The cruise 42 DNA assignment is inferred from 'F_10'.

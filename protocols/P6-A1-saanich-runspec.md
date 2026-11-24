@@ -44,7 +44,7 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
    - **DNA mapping (once).** All 39 DNA runs go through strobealign to `saanich_pooled.fasta`,
      producing `<SRR>.sorted.bam` plus .bai. `jgi_summarize_bam_contig_depths` on these gives
      the `--depths` table, and the BAM directory is `--bam_dir`.
-   - **After annotation (§2.3)**, each DNA BAM is name-collated (`samtools collate -O`) and its SAM
+   - **After annotation (§2.3)**, each DNA BAM is name-collated (`samtools collate -O -u in.bam tmp | samtools view -h -`, since collate emits BAM) and its SAM
      records are fed to `p6_field_count.py` with the pooled-reference CDS table. The DNA runs are
      not remapped.
 3. **Annotation and binning.** `mag_analysis --apptainer --gpu true --assembly saanich_pooled.fasta
@@ -59,6 +59,11 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
      - LorBin, which is long-read oriented (`lorbin_min_length` 80 kb), while these are
        short-read contigs;
      - Binette.
+   - **Pre-launch GPU check (codex-plexi 251106612219396096).** In a short job on the GPU
+     partition, run the binning container's `torch_device.sh` in the SemiBin2, COMEBin and
+     VAMB environments and require `cuda`. `modules/binning.nf` picks the device inside each
+     environment, independently of the wrapper's host check. Launch only if all three report
+     cuda.
    - **GPU guard.** If the GPU image or device is missing, the run must stop rather than fall
      back to CPU. The job log is checked for the "running on CPU" warning before results are
      used.

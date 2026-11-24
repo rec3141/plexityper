@@ -77,7 +77,7 @@ Files are in data/external/saanich/download_20261124/hawley_supp/: MOESM151 (Tab
 
 ## Saanich chemistry join (Dryad zip saved by grid; 899e821a2bb4, files unzipped and hashed in place)
 - The README gives **CH4 and N2O in nanomolar**, which resolves the unit conflict.
-- There are 43 unique paired cruise × depth events (44 sample IDs; cruise 75 at 135 m appears twice).
+- (Pre-audit) There are 43 unique paired cruise × depth events (44 sample IDs; cruise 75 at 135 m appears twice). See the final roster below: 38 events.
 - **Block gate: PASS on metadata.** 8 cruises, each with at least one oxic event (CTD_O2 ≥ 10 µM) and at least one suboxic/anoxic event. That gives 8 oxic and 8 anoxic blocks against a requirement of 3 each, and 43 events against 20.
 - **Chemistry, out of 43 events:**
   - Complete: CTD_O2, NO3, NH4 and NO2 (43/43).
@@ -95,7 +95,7 @@ Files are in data/external/saanich/download_20261124/hawley_supp/: MOESM151 (Tab
 See data/external/saanich/biosample_20261124/AUDIT.md (local only).
 - Table S2's metaG column is misaligned for cruises 72–74, so pairing was rebuilt from
   BioSample titles.
-- Proxy roster: 43 events, 8 blocks (8 oxic, 8 anoxic).
+- Proxy roster at this stage: 43 events, 8 blocks. **Superseded:** the reviewed final roster is **38 events in 8 cruise blocks** (7 oxic, 8 suboxic/anoxic). Five cruise-42 DNA samples were excluded for unconfirmed fraction; codex-plexi review 251097403444609024; proxy_roster.tsv 3813b8e4f982.
 - Strict roster: 0 events; bottle and cast are undocumented.
 - Fractions are compatible (0.22–2.7 µm).
 - The cruise 42 DNA assignment is inferred from 'F_10'.
@@ -114,3 +114,18 @@ See data/external/saanich/biosample_20261124/AUDIT.md (local only).
   be replaced by the MGnify per-sample assemblies with their per-CDS KO annotation. Binning
   would still be needed for the binned-KO classifier, or the primary could treat all contigs as
   unbinned (unambiguous KOs only). Either way is a run-spec change that needs cross-family review.
+
+## MGnify DNA crosswalk (codex-plexi 251104218186170368)
+`data/external/saanich/biosample_20261124/mgnify_dna_crosswalk.tsv` (local only).
+- 39 MGnify assemblies cover the 38 roster DNA BioSamples.
+- The two-run event SAMN05224393 has one assembly per run: ERZ4200970 from SRR3724642 and
+  ERZ4200982 from SRR3724643. The other 37 BioSamples each have one assembly built from their
+  single roster DNA run.
+- No assembly is shared between BioSamples.
+- Every source run is a roster DNA run, so no RNA-derived inputs are used.
+- Agreed design (codex-plexi; Carbon 251104438965944320): reuse **only these DNA contigs** in place
+  of illumina_assembly. Keep the pooled dedupe, mag_analysis binning, frozen KOfam adaptive-
+  threshold KO calls (table notes §2), Tiara, and strobealign mapping of all 39 DNA and 54 RNA runs.
+- Not used:
+  - eggNOG KOs, which lack newer KOfam IDs (K28504, K28385–7);
+  - an all-unbinned primary, which zeroes AER_HET and NIT_NXR and drops narGH and dsr/apr.

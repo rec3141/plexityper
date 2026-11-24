@@ -25,6 +25,7 @@ Updated 2026-11-20 (after grid's go to run P2/P6, 249688876280889344).
 - P2 is Carbon's to run (frozen e0dd8645dd32); Astra reviews.
 - P2 breadth DONE per library (232; manifest_v2.tsv 6635acc1a6ee; breadth_per_bam.tsv fd9625b15747). Task 2 via depth variant 8195122_2. Per-event union waits on grid library→campaign×station map. Equal-depth pass later (BAMs on Grex).
 - P2 event map (grid delegated 2026-11-24 "do your best"): scratch/p2_build_event_map.py 4d7d3291b024 -> event_map_best_effort.tsv dc0d9421aa24 (57 libs, 29 events). Carbon runs, Astra reviews. Saanich: Dryad tab opened in Chrome for grid manual save (BotStopper blocks automation).
+- P2 run DONE (Carbon): Q1/Q2 Inconclusive (Gate 2 unbinned donor-KO share >0.50). P6-A1 APPROVED (proxy pairing). Saanich proxy roster 38 events / 8 cruises (codex review closed 251097403444609024; data/external/saanich/biosample_20261124/proxy_roster.tsv 3813b8e4f982); strict 0. NEXT: grid to choose compute/storage (Grex?) for SRA download; then run spec.
 
 ## Staged data
 - data/grex_mag_freshwater/: read-only copy of the 490 derep-representative per_mag tables,

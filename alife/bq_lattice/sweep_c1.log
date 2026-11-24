@@ -1,0 +1,55 @@
+[  377s] 1/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812118 ok 377s
+[  453s] 2/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154618 ok 452s
+[  469s] 3/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434978 ok 469s
+[  472s] 4/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078948 ok 471s
+[  482s] 5/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323918 ok 481s
+[  488s] 6/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20814098 ok 487s
+[  493s] 7/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755448 ok 493s
+[  495s] 8/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/P_planted_stack1_A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20424838 ok 495s
+[  496s] 9/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481868 ok 495s
+[  501s] 10/10 /data/dev/plexityper/alife/bq_lattice/sweep_c1/runs/P_planted_stack1_A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20424839 ok 501s
+key	v2_status	v3_status	n
+A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	12
+A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	10
+A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0	plexi	plexi	4
+A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	14
+A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	11
+A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	plexi	plexi	3
+A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	6
+A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0	plexi	plexi	8
+A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	5
+A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	plexi	1
+A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	plexi	plexi	6
+E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1	not_plexi	not_plexi	2
+E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1	not_plexi	plexi	1
+E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1	plexi	plexi	11
+P_planted_stack1_A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0	not_plexi	not_plexi	11
+all	not_plexi	not_plexi	71
+all	not_plexi	plexi	2
+all	plexi	plexi	32
+particle	not_plexi	not_plexi	69
+particle	not_plexi	plexi	1
+particle	plexi	plexi	20
+water	not_plexi	not_plexi	70
+water	not_plexi	plexi	3
+water	plexi	plexi	33
+edges_all	v2		3095
+edges_all	v3		3131
+edges_particle	v2		1939
+edges_particle	v3		2003
+edges_water	v2		3101
+edges_water	v3		3135
+
+run	I_obs	I_obs_ci	I_oracle	I_oracle_ci	Sigma_leaky	Sigma_private	prev_leaky	prev_private
+A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481868	-0.02882329388016025	[-0.042817349347150556, -0.011424447601368602]	0.051325547323983756	[0.03492945805768728, 0.06914313039373364]	-0.02166147786507011	0.007161816015090139	0.5005597108345674	0.5896374410536117
+A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078948	0.0031781877292615945	[-0.05088170328313233, 0.051233388607856756]	0.047875487691904084	[-0.011131409191466645, 0.09097102989028637]	0.18436336975470624	0.18118518202544465	0.38208288591255885	0.2712719067728543
+A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755448	0.04830420875827457	[0.025765219450301035, 0.07634912748689589]	0.08740575178934407	[0.06045453343638787, 0.11919847067457626]	-0.0017017595150647935	-0.05000596827333936	0.4677262049102565	0.5750557824523524
+A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812118	0.22196391857330333	[0.18595338611527482, 0.25770645759955574]	0.18934280513050972	[0.16026882650165528, 0.22251809385127294]	0.19208695784278262	-0.029876960730520707	0.5259430399278461	0.6585899137509783
+A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434978	0.0515661472103659	[0.034093196299822284, 0.0691164089604785]	0.037543477985105156	[0.02107197172154156, 0.05755945469268667]	0.05489852835974851	0.0033323811493826128	0.522036744254587	0.5653430547689631
+A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154618	-0.1253139921349371	[-0.1844110505621823, -0.07877413232515608]	-0.21758573586565433	[-0.26552366239483977, -0.16888734534561836]	0.05654348637422668	0.18185747850916378	0.39525341403972186	0.290852544892869
+A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323918	0.033876773879033095	[0.01895115442645672, 0.05009809100721063]	0.0024839652960295666	[-0.009541804350611739, 0.016333637755361386]	0.029380202416829704	-0.0044965714622033914	0.5200205615676314	0.6122261611527215
+E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20814098	0.055555661147353774	[0.044306108610365415, 0.06941890095536989]	0.03872092369674185	[0.026846613224166926, 0.04963561766184098]	0.02380757880624884	-0.03174808234110493	0.5450652323232288	0.6923571995352057
+P_planted_stack1_A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20424838	-0.01525372477204634	[-0.025826213934586572, -0.0031130062647183442]	-0.00514836584663847	[-0.01580641249419177, 0.006091473409534932]	0.033426076065437016	0.048679800837483356	0.7880578900156839	0.578565639725357
+P_planted_stack1_A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20424839	0.046530179235968916	[0.029823032595759892, 0.06180344824208871]	0.04542084387215617	[0.03728070266137808, 0.054423693989290145]	0.04772591340846155	0.0011957341724926351	0.8089529350820865	0.5101327353786429
+
+done in 501s

@@ -1,0 +1,102 @@
+{
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "T_END": 1500.0,
+ "workers": 4,
+ "wall_s": 2025.7,
+ "mech": {
+  "neutral": {},
+  "crowd": {
+   "alpha": 1.3
+  },
+  "stackadv": {
+   "alpha": 0.8
+  },
+  "constitutive": {
+   "beta": 0.0
+  },
+  "channel": {
+   "phi": 0.8
+  },
+  "toxic_channel": {
+   "K_I_NO2": 2.0,
+   "phi": 0.8
+  }
+ },
+ "other": {
+  "electron_yield": {
+   "yield_mode": "electron"
+  },
+  "dispersal": {
+   "cell_mix": 30.0
+  },
+  "forced": {
+   "force_amp": 0.8,
+   "force_period": 30.0
+  }
+ },
+ "pools": {
+  "full": [
+   "AER",
+   "ROS",
+   "NAR",
+   "NIR",
+   "DEN",
+   "AERNAR",
+   "AERDEN",
+   "SRB",
+   "SRBH",
+   "SRBX",
+   "FER",
+   "MET",
+   "FERMET",
+   "AOB",
+   "NOB",
+   "CMX",
+   "AMX",
+   "SOB",
+   "SNR",
+   "SOBX",
+   "MOB",
+   "ALG"
+  ],
+  "split_only": [
+   "AER",
+   "ROS",
+   "NAR",
+   "NIR",
+   "AERNAR",
+   "SRB",
+   "SRBH",
+   "FER",
+   "MET",
+   "AOB",
+   "NOB",
+   "AMX",
+   "SOB",
+   "SNR",
+   "MOB",
+   "ALG"
+  ],
+  "stack_only": [
+   "AER",
+   "ROS",
+   "DEN",
+   "AERDEN",
+   "SRB",
+   "SRBH",
+   "SRBX",
+   "FERMET",
+   "CMX",
+   "AMX",
+   "SOB",
+   "SNR",
+   "SOBX",
+   "MOB",
+   "ALG"
+  ]
+ }
+}

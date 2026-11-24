@@ -1,0 +1,5 @@
+run_id	policy	opt_horizon_d	sigma_best_found	powell_success	powell_message	nfev	second_pass_gain	second_pass_rel_gain	params_at_bound	budget_rel_err
+neutral__full__s0	static_best_H1	1	1877.57	False	Maximum number of function evaluations has been exceeded.	140	0	0	0	0
+neutral__full__s0	static_best_H10	10	1092.43	False	Maximum number of function evaluations has been exceeded.	140	0.897869	0.000822577	0	0
+neutral__full__s0	static_best_H100	100	219.311	False	Maximum number of function evaluations has been exceeded.	140	0.188299	0.000859332	0	1.18665e-16
+neutral__full__s0	static_best_H1000	1000	94.9418	False	Maximum number of function evaluations has been exceeded.	140	0.014658	0.000154413	0	1.18665e-16

@@ -1,0 +1,163 @@
+pathway	flux_prod	flux_cons	stacked_share	depth_prod	depth_cons	depth_sep	self_supply	top_cons_types	run_id
+denitrification NO3->NO2->N2	0.106357	0.157892	0.995865	12.7363	13.3245	0.58818	0.178988	AERDEN:0.99,NIR:0.00,DEN:0.00	neutral__full__s0
+nitrification NH4->NO2->NO3	3.9821	2.7301	0.742847	6.38821	7.61709	1.22888	0.595676	CMX:0.74,NOB:0.26	neutral__full__s0
+fermentation->methanogenesis (H2)	0.235701	0.0449246	0.354113	21.805	21.7463	-0.0587011	0.354113	MET:0.65,FERMET:0.35	neutral__full__s0
+fermentation->H2 sulfate reduction	0.235701	0.0726072	0	21.805	21.8024	-0.0025483	0	SRBX:0.69,SRBH:0.31	neutral__full__s0
+sulfate reduction->sulfide oxidation	4.01204	2.74114	0	22.1351	10.8542	-11.281	0	SOB:0.64,SOBX:0.36	neutral__full__s0
+methanogenesis->methanotrophy	0.0449246	0.0224008	0	21.7463	10.8536	-10.8927	0	MOB:1.00	neutral__full__s0
+denitrification NO3->NO2->N2	0.142965	0.0956174	0.994891	14.7803	15.1569	0.376597	0.235495	AERDEN:0.99,NIR:0.01,DEN:0.00	neutral__full__s1
+nitrification NH4->NO2->NO3	3.43976	2.5527	0.861753	6.76984	8.13285	1.36301	0.836636	CMX:0.86,NOB:0.14	neutral__full__s1
+fermentation->methanogenesis (H2)	0.200798	0.0678599	0.0347642	22.9906	23.0462	0.0555586	0.0347642	MET:0.97,FERMET:0.03	neutral__full__s1
+fermentation->H2 sulfate reduction	0.200798	0.0322824	0	22.9906	22.7989	-0.191768	0	SRBH:0.69,SRBX:0.31	neutral__full__s1
+sulfate reduction->sulfide oxidation	2.68851	1.90967	0	23.7115	12.4368	-11.2747	0	SOB:0.85,SOBX:0.15	neutral__full__s1
+methanogenesis->methanotrophy	0.0678599	0.0376681	0	23.0462	12.7746	-10.2715	0	MOB:1.00	neutral__full__s1
+denitrification NO3->NO2->N2	0.151166	0.076647	0.991367	26.5291	27.067	0.53795	0.0803891	AERDEN:0.99,NIR:0.01,DEN:0.00	neutral__full__s2
+nitrification NH4->NO2->NO3	1.30528	1.01417	0.836562	11.2928	13.5254	2.23262	0.822753	CMX:0.84,NOB:0.16	neutral__full__s2
+fermentation->methanogenesis (H2)	0.0387992	0.00990931	0.0312431	28.1823	28.093	-0.0892891	0.0312431	MET:0.97,FERMET:0.03	neutral__full__s2
+fermentation->H2 sulfate reduction	0.0387992	0.00940206	0	28.1823	28.0381	-0.144221	0	SRBH:0.99,SRBX:0.01	neutral__full__s2
+sulfate reduction->sulfide oxidation	0.0380023	0.0917423	0	28.317	13.4453	-14.8717	0	SOBX:0.86,SOB:0.14	neutral__full__s2
+methanogenesis->methanotrophy	0.00990931	0.00743576	0	28.093	22.1291	-5.96386	0	MOB:1.00	neutral__full__s2
+denitrification NO3->NO2->N2	0.142377	0.0979585	0.98431	14.7912	15.1068	0.315603	0.15957	AERDEN:0.98,NIR:0.02,DEN:0.00	crowd__full__s0
+nitrification NH4->NO2->NO3	3.11622	2.39883	0.0471636	7.18802	8.47578	1.28776	0.0201145	NOB:0.95,CMX:0.05	crowd__full__s0
+fermentation->methanogenesis (H2)	0.250903	0.0583418	0.359755	23.0517	22.9439	-0.107815	0.34503	MET:0.64,FERMET:0.36	crowd__full__s0
+fermentation->H2 sulfate reduction	0.250903	0.0667433	0	23.0517	23.0926	0.0409353	0	SRBX:0.54,SRBH:0.46	crowd__full__s0
+sulfate reduction->sulfide oxidation	2.69833	1.93834	0	23.6529	12.3171	-11.3358	0	SOB:0.96,SOBX:0.04	crowd__full__s0
+methanogenesis->methanotrophy	0.0583418	0.0328652	0	22.9439	12.8002	-10.1437	0	MOB:1.00	crowd__full__s0
+denitrification NO3->NO2->N2	0.0459962	0.0217684	0.892132	18.8189	19.1738	0.35486	0.0107252	AERDEN:0.87,NIR:0.11,DEN:0.02	crowd__full__s1
+nitrification NH4->NO2->NO3	2.20914	1.83659	0.166337	7.92688	9.96876	2.04188	0.100991	NOB:0.83,CMX:0.17	crowd__full__s1
+fermentation->methanogenesis (H2)	0.17006	0.0628561	0.0173462	25.3481	25.4303	0.0822069	0.0173462	MET:0.98,FERMET:0.02	crowd__full__s1
+fermentation->H2 sulfate reduction	0.17006	0.0219608	0	25.3481	24.9957	-0.352476	0	SRBH:0.92,SRBX:0.08	crowd__full__s1
+sulfate reduction->sulfide oxidation	1.26152	0.980088	0	25.9738	15.307	-10.6668	0	SOB:0.97,SOBX:0.03	crowd__full__s1
+methanogenesis->methanotrophy	0.0628561	0.0405306	0	25.4303	16.4098	-9.02051	0	MOB:1.00	crowd__full__s1
+denitrification NO3->NO2->N2	0.142467	0.0586954	0.925129	27.0918	27.6401	0.548238	0.0987427	AERDEN:0.91,NIR:0.07,DEN:0.01	crowd__full__s2
+nitrification NH4->NO2->NO3	1.17352	0.964581	0.153684	11.4668	13.3839	1.91712	0.0913786	NOB:0.85,CMX:0.15	crowd__full__s2
+fermentation->methanogenesis (H2)	0.0287235	0.0073319	0.00930117	28.2412	28.1353	-0.105935	0.00930117	MET:0.99,FERMET:0.01	crowd__full__s2
+fermentation->H2 sulfate reduction	0.0287235	0.0069503	0	28.2412	28.1026	-0.1386	0	SRBH:1.00,SRBX:0.00	crowd__full__s2
+sulfate reduction->sulfide oxidation	0.0177101	0.0634951	0	28.3363	11.7538	-16.5824	0	SOB:0.62,SOBX:0.38	crowd__full__s2
+methanogenesis->methanotrophy	0.0073319	0.00531408	0	28.1353	22.1134	-6.02185	0	MOB:1.00	crowd__full__s2
+denitrification NO3->NO2->N2	0.061021	0.24507	0.998289	12.6584	12.9788	0.320427	0.059599	AERDEN:1.00,NIR:0.00,DEN:0.00	stackadv__full__s0
+nitrification NH4->NO2->NO3	4.29021	2.89946	0.947381	6.47729	7.45463	0.977344	0.900724	CMX:0.95,NOB:0.05	stackadv__full__s0
+fermentation->methanogenesis (H2)	0.206744	0.0371261	0.36918	21.6738	21.6405	-0.0333484	0.36918	MET:0.63,FERMET:0.37	stackadv__full__s0
+fermentation->H2 sulfate reduction	0.206744	0.0659751	0	21.6738	21.6557	-0.0181661	0	SRBX:0.72,SRBH:0.28	stackadv__full__s0
+sulfate reduction->sulfide oxidation	4.13103	2.81235	0	22.0162	10.782	-11.2341	0	SOBX:0.72,SOB:0.28	stackadv__full__s0
+methanogenesis->methanotrophy	0.0371261	0.0178503	0	21.6405	10.688	-10.9525	0	MOB:1.00	stackadv__full__s0
+denitrification NO3->NO2->N2	0.114267	0.130267	0.997375	13.6981	14.2479	0.549743	0.21607	AERDEN:1.00,NIR:0.00,DEN:0.00	stackadv__full__s1
+nitrification NH4->NO2->NO3	3.93593	3.06967	0.958665	6.39181	7.71183	1.32001	0.918399	CMX:0.96,NOB:0.04	stackadv__full__s1
+fermentation->methanogenesis (H2)	0.189805	0.0594102	0.0551031	22.3292	22.3518	0.0226691	0.0551031	MET:0.94,FERMET:0.06	stackadv__full__s1
+fermentation->H2 sulfate reduction	0.189805	0.0352461	0	22.3292	22.2253	-0.10384	0	SRBH:0.57,SRBX:0.43	stackadv__full__s1
+sulfate reduction->sulfide oxidation	3.29015	2.24424	0	22.9425	11.6381	-11.3044	0	SOBX:0.52,SOB:0.48	stackadv__full__s1
+methanogenesis->methanotrophy	0.0594102	0.0311676	0	22.3518	11.7773	-10.5746	0	MOB:1.00	stackadv__full__s1
+denitrification NO3->NO2->N2	0.138762	0.079144	0.995242	26.9295	27.2541	0.324554	0.329469	AERDEN:0.99,NIR:0.00,DEN:0.00	stackadv__full__s2
+nitrification NH4->NO2->NO3	1.33347	0.982126	0.903591	11.1648	13.2692	2.10438	0.888256	CMX:0.90,NOB:0.10	stackadv__full__s2
+fermentation->methanogenesis (H2)	0.0333818	0.00862991	0.0557188	28.3209	28.2329	-0.0880884	0.0557188	MET:0.94,FERMET:0.06	stackadv__full__s2
+fermentation->H2 sulfate reduction	0.0333818	0.00798248	0	28.3209	28.1433	-0.177641	0	SRBH:0.98,SRBX:0.02	stackadv__full__s2
+sulfate reduction->sulfide oxidation	0.0349895	0.0922859	0	28.4559	12.9122	-15.5437	0	SOBX:0.92,SOB:0.08	stackadv__full__s2
+methanogenesis->methanotrophy	0.00862991	0.00641829	0	28.2329	22.285	-5.94784	0	MOB:1.00	stackadv__full__s2
+denitrification NO3->NO2->N2	0.094322	0.0234602	0.089793	9.41927	9.75283	0.333562	0.0893528	NIR:0.91,AERDEN:0.07,DEN:0.02	constitutive__full__s0
+nitrification NH4->NO2->NO3	5.99255	4.63425	0.82285	4.64866	5.20269	0.554028	0.289119	CMX:0.82,NOB:0.18	constitutive__full__s0
+fermentation->methanogenesis (H2)	2.40286	0.217691	0.729486	20.8919	22.0397	1.14781	0.668912	FERMET:0.73,MET:0.27	constitutive__full__s0
+fermentation->H2 sulfate reduction	2.40286	0.983037	0	20.8919	20.6324	-0.25944	0	SRBX:0.97,SRBH:0.03	constitutive__full__s0
+sulfate reduction->sulfide oxidation	8.35404	5.92514	0	18.8199	7.83588	-10.984	0	SOB:0.95,SOBX:0.05	constitutive__full__s0
+methanogenesis->methanotrophy	0.217691	0.0879037	0	22.0397	8.27566	-13.764	0	MOB:1.00	constitutive__full__s0
+denitrification NO3->NO2->N2	0.0108359	0.00247644	0.248798	10.4664	10.7603	0.293883	0.248709	NIR:0.75,AERDEN:0.16,DEN:0.09	constitutive__full__s1
+nitrification NH4->NO2->NO3	5.26301	4.35513	0.965959	4.85626	5.44772	0.591454	0.369044	CMX:0.97,NOB:0.03	constitutive__full__s1
+fermentation->methanogenesis (H2)	0.870679	0.238105	0.199942	21.1832	21.6542	0.470984	0.199804	MET:0.80,FERMET:0.20	constitutive__full__s1
+fermentation->H2 sulfate reduction	0.870679	0.196668	0	21.1832	20.6037	-0.579579	0	SRBX:0.82,SRBH:0.18	constitutive__full__s1
+sulfate reduction->sulfide oxidation	6.62269	4.28553	0	20.0525	8.65141	-11.401	0	SOB:1.00,SOBX:0.00	constitutive__full__s1
+methanogenesis->methanotrophy	0.238105	0.108469	0	21.6542	9.20162	-12.4526	0	MOB:1.00	constitutive__full__s1
+denitrification NO3->NO2->N2	0.225044	0.0028176	0.400683	11.2588	12.112	0.853234	0.282622	NIR:0.60,AERDEN:0.30,DEN:0.10	constitutive__full__s2
+nitrification NH4->NO2->NO3	3.93094	3.40442	0.957382	5.54824	6.76177	1.21353	0.344677	CMX:0.96,NOB:0.04	constitutive__full__s2
+fermentation->methanogenesis (H2)	0.415515	0.107703	0.32318	21.6233	21.7853	0.16195	0.323049	MET:0.68,FERMET:0.32	constitutive__full__s2
+fermentation->H2 sulfate reduction	0.415515	0.0996124	0	21.6233	21.4282	-0.195074	0	SRBH:0.53,SRBX:0.47	constitutive__full__s2
+sulfate reduction->sulfide oxidation	4.65287	3.02837	0	21.4739	9.9378	-11.5361	0	SOB:0.91,SOBX:0.09	constitutive__full__s2
+methanogenesis->methanotrophy	0.107703	0.0525289	0	21.7853	10.1723	-11.613	0	MOB:1.00	constitutive__full__s2
+denitrification NO3->NO2->N2	0.114799	0.173361	0.996413	12.7201	13.2733	0.553136	0.184096	AERDEN:0.99,NIR:0.00,DEN:0.00	channel__full__s0
+nitrification NH4->NO2->NO3	4.08428	3.02927	0.972778	6.3839	7.34484	0.96094	0.911851	CMX:0.97,NOB:0.03	channel__full__s0
+fermentation->methanogenesis (H2)	0.29011	0.0702118	0.597168	21.912	21.9086	-0.00342951	0.597168	FERMET:0.60,MET:0.40	channel__full__s0
+fermentation->H2 sulfate reduction	0.29011	0.0745238	0	21.912	21.8776	-0.0344952	0	SRBX:0.70,SRBH:0.30	channel__full__s0
+sulfate reduction->sulfide oxidation	3.97607	2.7116	0	22.1483	10.8387	-11.3096	0	SOB:0.64,SOBX:0.36	channel__full__s0
+methanogenesis->methanotrophy	0.0702118	0.0369449	0	21.9086	11.1143	-10.7943	0	MOB:1.00	channel__full__s0
+denitrification NO3->NO2->N2	0.15326	0.112423	0.995953	14.7579	15.0918	0.333919	0.247723	AERDEN:0.99,NIR:0.00,DEN:0.00	channel__full__s1
+nitrification NH4->NO2->NO3	3.55164	2.85476	0.977094	6.76963	7.78649	1.01686	0.943015	CMX:0.98,NOB:0.02	channel__full__s1
+fermentation->methanogenesis (H2)	0.209969	0.0721199	0.0933802	23.0318	23.0808	0.0490575	0.0933802	MET:0.91,FERMET:0.09	channel__full__s1
+fermentation->H2 sulfate reduction	0.209969	0.0326082	0	23.0318	22.8482	-0.183542	0	SRBH:0.68,SRBX:0.32	channel__full__s1
+sulfate reduction->sulfide oxidation	2.67451	1.89301	0	23.7309	12.4222	-11.3087	0	SOB:0.85,SOBX:0.15	channel__full__s1
+methanogenesis->methanotrophy	0.0721199	0.0402378	0	23.0808	12.8142	-10.2666	0	MOB:1.00	channel__full__s1
+denitrification NO3->NO2->N2	0.159144	0.0791602	0.992788	26.4783	27.0064	0.528146	0.130908	AERDEN:0.99,NIR:0.01,DEN:0.01	channel__full__s2
+nitrification NH4->NO2->NO3	1.3211	1.04634	0.932613	11.2917	13.6	2.30826	0.907094	CMX:0.93,NOB:0.07	channel__full__s2
+fermentation->methanogenesis (H2)	0.0396628	0.0103922	0.0822175	28.1855	28.0922	-0.0933648	0.0822175	MET:0.92,FERMET:0.08	channel__full__s2
+fermentation->H2 sulfate reduction	0.0396628	0.00935162	0	28.1855	28.0489	-0.136672	0	SRBH:0.99,SRBX:0.01	channel__full__s2
+sulfate reduction->sulfide oxidation	0.0379757	0.0914709	0	28.3167	13.3976	-14.9191	0	SOBX:0.86,SOB:0.14	channel__full__s2
+methanogenesis->methanotrophy	0.0103922	0.00786221	0	28.0922	22.1822	-5.90994	0	MOB:1.00	channel__full__s2
+denitrification NO3->NO2->N2	0.086658	0.226764	0.996901	13.7135	14	0.286489	0.052274	AERDEN:0.99,NIR:0.00,DEN:0.00	toxic_channel__full__s0
+nitrification NH4->NO2->NO3	3.8437	2.80481	0.969631	7.00181	7.98887	0.987065	0.920945	CMX:0.97,NOB:0.03	toxic_channel__full__s0
+fermentation->methanogenesis (H2)	0.259272	0.063286	0.586138	22.4209	22.3561	-0.0648347	0.586138	FERMET:0.59,MET:0.41	toxic_channel__full__s0
+fermentation->H2 sulfate reduction	0.259272	0.0660495	0	22.4209	22.4432	0.0222608	0	SRBX:0.68,SRBH:0.32	toxic_channel__full__s0
+sulfate reduction->sulfide oxidation	3.34238	2.26249	0	22.8849	11.4949	-11.39	0	SOB:0.70,SOBX:0.30	toxic_channel__full__s0
+methanogenesis->methanotrophy	0.063286	0.0339304	0	22.3561	11.8156	-10.5405	0	MOB:1.00	toxic_channel__full__s0
+denitrification NO3->NO2->N2	0.108075	0.120323	0.995676	15.712	15.9183	0.206393	0.0139449	AERDEN:0.99,NIR:0.00,DEN:0.00	toxic_channel__full__s1
+nitrification NH4->NO2->NO3	3.31895	2.63865	0.974283	7.1676	8.23364	1.06604	0.946933	CMX:0.97,NOB:0.03	toxic_channel__full__s1
+fermentation->methanogenesis (H2)	0.190576	0.0653475	0.0923587	23.5331	23.5772	0.0440791	0.0923587	MET:0.91,FERMET:0.09	toxic_channel__full__s1
+fermentation->H2 sulfate reduction	0.190576	0.0296996	0	23.5331	23.3568	-0.176305	0	SRBH:0.70,SRBX:0.30	toxic_channel__full__s1
+sulfate reduction->sulfide oxidation	2.29868	1.6288	0	24.3256	12.9822	-11.3434	0	SOB:0.87,SOBX:0.13	toxic_channel__full__s1
+methanogenesis->methanotrophy	0.0653475	0.0370554	0	23.5772	13.4785	-10.0987	0	MOB:1.00	toxic_channel__full__s1
+denitrification NO3->NO2->N2	0.152475	0.074035	0.99225	27.2864	27.7692	0.482826	0.237467	AERDEN:0.99,NIR:0.01,DEN:0.01	toxic_channel__full__s2
+nitrification NH4->NO2->NO3	1.24604	0.987127	0.925083	11.5572	13.7456	2.18839	0.904551	CMX:0.93,NOB:0.07	toxic_channel__full__s2
+fermentation->methanogenesis (H2)	0.024032	0.00634543	0.0648456	28.3645	28.2394	-0.125045	0.0648456	MET:0.94,FERMET:0.06	toxic_channel__full__s2
+fermentation->H2 sulfate reduction	0.024032	0.00559923	0	28.3645	28.2078	-0.156662	0	SRBH:0.99,SRBX:0.01	toxic_channel__full__s2
+sulfate reduction->sulfide oxidation	0.0138061	0.0615431	0	28.4548	10.7435	-17.7113	0	SOBX:0.81,SOB:0.19	toxic_channel__full__s2
+methanogenesis->methanotrophy	0.00634543	0.00449535	0	28.2394	22.1646	-6.07482	0	MOB:1.00	toxic_channel__full__s2
+denitrification NO3->NO2->N2	0.00536454	0.0505978	0.99314	16.3876	17.0667	0.679076	0.00141328	AERDEN:0.99,NIR:0.01,DEN:0.00	electron_yield__full__s0
+nitrification NH4->NO2->NO3	2.86786	2.81361	0.19122	7.30715	9.66987	2.36273	0.140734	NOB:0.81,CMX:0.19	electron_yield__full__s0
+fermentation->methanogenesis (H2)	4.72857	0.651392	0.0899214	23.9011	24.0917	0.1906	0.0899214	MET:0.91,FERMET:0.09	electron_yield__full__s0
+fermentation->H2 sulfate reduction	4.72857	1.71268	0	23.9011	23.8299	-0.0712757	0	SRBH:0.99,SRBX:0.01	electron_yield__full__s0
+sulfate reduction->sulfide oxidation	0.0609136	1.17034	0	23.5823	13.9297	-9.65255	0	SOBX:0.77,SOB:0.23	electron_yield__full__s0
+methanogenesis->methanotrophy	0.651392	0.444157	0	24.0917	15.6539	-8.43786	0	MOB:1.00	electron_yield__full__s0
+denitrification NO3->NO2->N2	0.109539	0.00495768	0.941452	19.0757	20.1807	1.10494	0.903652	AERDEN:0.93,NIR:0.06,DEN:0.01	electron_yield__full__s1
+nitrification NH4->NO2->NO3	2.49242	2.17394	0.212532	7.40674	8.99665	1.58991	0.205566	NOB:0.79,CMX:0.21	electron_yield__full__s1
+fermentation->methanogenesis (H2)	3.36461	1.57936	5.42575e-06	25.1819	25.1789	-0.00304929	5.42575e-06	MET:1.00,FERMET:0.00	electron_yield__full__s1
+fermentation->H2 sulfate reduction	3.36461	0.102836	0	25.1819	25.2363	0.0543113	0	SRBH:1.00,SRBX:0.00	electron_yield__full__s1
+sulfate reduction->sulfide oxidation	0.0234088	0.158505	0	24.5913	7.71709	-16.8743	0	SOB:0.76,SOBX:0.24	electron_yield__full__s1
+methanogenesis->methanotrophy	1.57936	1.14626	0	25.1789	17.4928	-7.68608	0	MOB:1.00	electron_yield__full__s1
+denitrification NO3->NO2->N2	0.330975	0.00611811	0.957648	29.4554	29.4885	0.0330317	0.957648	AERDEN:0.95,NIR:0.04,DEN:0.01	electron_yield__full__s2
+nitrification NH4->NO2->NO3	1.00528	1.42191	0.442639	11.6685	20.6564	8.98793	0.214012	NOB:0.56,CMX:0.44	electron_yield__full__s2
+fermentation->methanogenesis (H2)	0.00645754	0.00177954	0.000931713	28.5408	28.648	0.107194	0.000931713	MET:1.00,FERMET:0.00	electron_yield__full__s2
+fermentation->H2 sulfate reduction	0.00645754	0.00140063	0	28.5408	28.5406	-0.000194271	0	SRBH:1.00,SRBX:0.00	electron_yield__full__s2
+sulfate reduction->sulfide oxidation	0.00164449	0.0201872	0	28.3655	9.63288	-18.7326	0	SOBX:0.65,SOB:0.35	electron_yield__full__s2
+methanogenesis->methanotrophy	0.00177954	0.00112163	0	28.648	22.9783	-5.66968	0	MOB:1.00	electron_yield__full__s2
+denitrification NO3->NO2->N2	0.067774	0.26964	0.998857	14.4506	14.6477	0.197117	0.0143151	AERDEN:1.00,NIR:0.00,DEN:0.00	dispersal__full__s0
+nitrification NH4->NO2->NO3	3.5165	2.25457	0.865513	7.75652	9.15634	1.39983	0.715151	CMX:0.87,NOB:0.13	dispersal__full__s0
+fermentation->methanogenesis (H2)	0.237288	0.0565006	0.397255	22.8632	23.2043	0.341081	0.397255	MET:0.60,FERMET:0.40	dispersal__full__s0
+fermentation->H2 sulfate reduction	0.237288	0.061709	0	22.8632	22.4682	-0.394988	0	SRBX:0.57,SRBH:0.43	dispersal__full__s0
+sulfate reduction->sulfide oxidation	2.98685	2.07034	0	23.1203	10.9993	-12.121	0	SOBX:0.51,SOB:0.49	dispersal__full__s0
+methanogenesis->methanotrophy	0.0565006	0.0247005	0	23.2043	11.1838	-12.0205	0	MOB:1.00	dispersal__full__s0
+denitrification NO3->NO2->N2	0.118505	0.187501	0.998037	17.6806	17.9013	0.220742	0.0023744	AERDEN:1.00,NIR:0.00,DEN:0.00	dispersal__full__s1
+nitrification NH4->NO2->NO3	2.81024	2.02494	0.880366	8.72055	10.4248	1.70421	0.828973	CMX:0.88,NOB:0.12	dispersal__full__s1
+fermentation->methanogenesis (H2)	0.202074	0.0720213	0.0496829	24.6733	24.7181	0.0447901	0.0496829	MET:0.95,FERMET:0.05	dispersal__full__s1
+fermentation->H2 sulfate reduction	0.202074	0.0286693	0	24.6733	24.3862	-0.287054	0	SRBH:0.87,SRBX:0.13	dispersal__full__s1
+sulfate reduction->sulfide oxidation	1.43895	1.12899	0	24.8508	13.0882	-11.7626	0	SOB:0.63,SOBX:0.37	dispersal__full__s1
+methanogenesis->methanotrophy	0.0720213	0.0386482	0	24.7181	13.9441	-10.774	0	MOB:1.00	dispersal__full__s1
+denitrification NO3->NO2->N2	0.169432	0.0832356	0.99777	26.3615	26.8168	0.455314	0.027644	AERDEN:1.00,NIR:0.00,DEN:0.00	dispersal__full__s2
+nitrification NH4->NO2->NO3	1.26175	1.00196	0.853384	11.797	13.9441	2.14705	0.82566	CMX:0.85,NOB:0.15	dispersal__full__s2
+fermentation->methanogenesis (H2)	0.0225071	0.00596382	0.0170143	28.173	28.0502	-0.12284	0.0170143	MET:0.98,FERMET:0.02	dispersal__full__s2
+fermentation->H2 sulfate reduction	0.0225071	0.00521166	0	28.173	27.9356	-0.237408	0	SRBH:0.98,SRBX:0.02	dispersal__full__s2
+sulfate reduction->sulfide oxidation	0.00930539	0.0548269	0	28.1991	10.59	-17.6091	0	SOBX:0.77,SOB:0.23	dispersal__full__s2
+methanogenesis->methanotrophy	0.00596382	0.00359371	0	28.0502	20.3294	-7.72074	0	MOB:1.00	dispersal__full__s2
+denitrification NO3->NO2->N2	0.0594827	0.194054	0.996949	14.6401	14.8212	0.1811	0.00976054	AERDEN:1.00,NIR:0.00,DEN:0.00	forced__full__s0
+nitrification NH4->NO2->NO3	2.97278	2.11375	0.786325	7.82077	9.09564	1.27487	0.67249	CMX:0.79,NOB:0.21	forced__full__s0
+fermentation->methanogenesis (H2)	0.193851	0.0380459	0.341794	22.6502	22.4009	-0.249357	0.341794	MET:0.66,FERMET:0.34	forced__full__s0
+fermentation->H2 sulfate reduction	0.193851	0.0577049	0	22.6502	22.7027	0.0524553	0	SRBX:0.65,SRBH:0.35	forced__full__s0
+sulfate reduction->sulfide oxidation	2.84384	1.89422	0	23.3084	12.3133	-10.9951	0	SOB:0.73,SOBX:0.27	forced__full__s0
+methanogenesis->methanotrophy	0.0380459	0.0196821	0	22.4009	12.4393	-9.96158	0	MOB:1.00	forced__full__s0
+denitrification NO3->NO2->N2	0.0469308	0.079815	0.993627	17.4968	17.7542	0.257382	0.000207303	AERDEN:0.99,NIR:0.01,DEN:0.00	forced__full__s1
+nitrification NH4->NO2->NO3	2.42751	1.80317	0.866325	8.15381	9.54277	1.38896	0.850383	CMX:0.87,NOB:0.13	forced__full__s1
+fermentation->methanogenesis (H2)	0.149467	0.0497792	0.0311495	24.3489	24.3947	0.0457892	0.0311495	MET:0.97,FERMET:0.03	forced__full__s1
+fermentation->H2 sulfate reduction	0.149467	0.0241696	0	24.3489	24.1441	-0.204865	0	SRBH:0.73,SRBX:0.27	forced__full__s1
+sulfate reduction->sulfide oxidation	1.69751	1.2419	0	25.2193	14.4231	-10.7962	0	SOB:0.76,SOBX:0.24	forced__full__s1
+methanogenesis->methanotrophy	0.0497792	0.0289308	0	24.3947	14.8261	-9.56857	0	MOB:1.00	forced__full__s1
+denitrification NO3->NO2->N2	0.0709981	0.000100504	0.156853	29.4607	29.0639	-0.396737	0.156853	NIR:0.84,AERDEN:0.15,DEN:0.00	forced__full__s2
+nitrification NH4->NO2->NO3	0.876638	0.873579	0.763253	13.1127	17.1643	4.05168	0.66026	CMX:0.76,NOB:0.24	forced__full__s2
+fermentation->methanogenesis (H2)	0.00139817	0.000332418	0.00225037	27.9651	28.1132	0.148179	0.00225037	MET:1.00,FERMET:0.00	forced__full__s2
+fermentation->H2 sulfate reduction	0.00139817	0.000312051	0	27.9651	28.0074	0.0423191	0	SRBH:0.99,SRBX:0.01	forced__full__s2
+sulfate reduction->sulfide oxidation	0.000509453	0.0248405	0	27.9979	7.53994	-20.4579	0	SOBX:0.78,SOB:0.22	forced__full__s2
+methanogenesis->methanotrophy	0.000332418	0.000216244	0	28.1132	22.9278	-5.18543	0	MOB:1.00	forced__full__s2

@@ -1,0 +1,106 @@
+[   193s] 1/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481868 ok 192s
+[   199s] 2/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481869 ok 199s
+[   239s] 3/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D1_phi0.2_o_resp0.2_euk_frac0/s20731358 ok 239s
+[   240s] 4/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D1_phi0.2_o_resp0.2_euk_frac0/s20511478 ok 240s
+[   250s] 5/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D1_phi0.2_o_resp0.2_euk_frac0/s20731359 ok 250s
+[   258s] 6/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D1_phi0.2_o_resp0.2_euk_frac0/s20511480 ok 257s
+[   261s] 7/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D1_phi0.2_o_resp0.2_euk_frac0/s20511479 ok 261s
+[   261s] 8/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D1_phi0.2_o_resp0.2_euk_frac0/s20731360 ok 261s
+[   336s] 9/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481870 ok 143s
+[   355s] 10/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21000828 ok 155s
+[   387s] 11/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21000830 ok 147s
+[   401s] 12/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21000829 ok 162s
+[   408s] 13/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755448 ok 158s
+[   420s] 14/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755449 ok 162s
+[   427s] 15/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755450 ok 166s
+[   441s] 16/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.01_D0.3_phi0.2_o_resp0.2_euk_frac0/s20973728 ok 179s
+[   513s] 17/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078950 ok 105s
+[   518s] 18/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.01_D0.3_phi0.2_o_resp0.2_euk_frac0/s20973729 ok 182s
+[   540s] 19/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078948 ok 152s
+[   540s] 20/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.01_D0.3_phi0.2_o_resp0.2_euk_frac0/s20973730 ok 185s
+[   552s] 21/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078949 ok 151s
+[   585s] 22/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s20337909 ok 158s
+[   590s] 23/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s20337908 ok 169s
+[   600s] 24/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s20337910 ok 159s
+[   677s] 25/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20438369 ok 159s
+[   680s] 26/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20438368 ok 167s
+[   698s] 27/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp1_euk_frac0/s21163228 ok 158s
+[   706s] 28/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20438370 ok 166s
+[   716s] 29/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp1_euk_frac0/s21163229 ok 164s
+[   738s] 30/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434978 ok 149s
+[   742s] 31/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp1_euk_frac0/s21163230 ok 156s
+[   752s] 32/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434979 ok 152s
+[   824s] 33/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21199058 ok 144s
+[   831s] 34/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434980 ok 154s
+[   843s] 35/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21199059 ok 145s
+[   850s] 36/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21199060 ok 145s
+[   874s] 37/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323918 ok 158s
+[   894s] 38/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323919 ok 156s
+[   907s] 39/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323920 ok 165s
+[   918s] 40/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.01_D0.3_phi0.2_o_resp0.2_euk_frac0/s20844598 ok 166s
+[   985s] 41/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.01_D0.3_phi0.2_o_resp0.2_euk_frac0/s20844599 ok 161s
+[   988s] 42/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154618 ok 145s
+[   994s] 43/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.01_D0.3_phi0.2_o_resp0.2_euk_frac0/s20844600 ok 163s
+[  1013s] 44/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154619 ok 162s
+[  1019s] 45/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154620 ok 145s
+[  1051s] 46/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s21243228 ok 157s
+[  1080s] 47/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s21243229 ok 174s
+[  1093s] 48/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s21243230 ok 176s
+[  1149s] 49/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20607158 ok 164s
+[  1149s] 50/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20607159 ok 161s
+[  1167s] 51/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20607160 ok 173s
+[  1189s] 52/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp1_euk_frac0/s20588788 ok 177s
+[  1191s] 53/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp1_euk_frac0/s20588789 ok 173s
+[  1212s] 54/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp1_euk_frac0/s20588790 ok 161s
+[  1226s] 55/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0.5_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20626358 ok 145s
+[  1240s] 56/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0.5_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20626359 ok 147s
+[  1279s] 57/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0.5_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20626360 ok 130s
+[  1287s] 58/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s21230548 ok 138s
+[  1318s] 59/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20841929 ok 127s
+[  1321s] 60/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s21230549 ok 154s
+[  1341s] 61/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20841928 ok 151s
+[  1386s] 62/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20271558 ok 174s
+[  1391s] 63/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20271559 ok 165s
+[  1416s] 64/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0.1/s20943568 ok 176s
+[  1442s] 65/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0.1/s20943569 ok 163s
+[  1454s] 66/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0.1/s20688528 ok 166s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1470s] 67/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20814099 ok 129s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1473s] 68/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20684728 ok 57s
+[  1475s] 69/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20814098 ok 154s
+[  1496s] 70/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0.1/s20688529 ok 178s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1520s] 71/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20885238 ok 134s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1554s] 72/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20885239 ok 164s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1569s] 73/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20684729 ok 127s
+[  1574s] 74/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0.1/s21227119 ok 99s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1598s] 75/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0.1/s21021158 ok 144s
+[  1609s] 76/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0.1/s21021159 ok 139s
+[  1615s] 77/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0.1/s21227118 ok 142s
+[  1639s] 78/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20584468 ok 143s
+[  1655s] 79/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20584469 ok 135s
+[  1656s] 80/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20584470 ok 102s
+[  1662s] 81/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812119 ok 88s
+[  1662s] 82/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812118 ok 93s
+[  1690s] 83/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812120 ok 92s
+[  1701s] 84/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0.1/s20991238 ok 93s
+[  1713s] 85/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0.1/s20991239 ok 98s
+/data/miniforge3/lib/python3.13/site-packages/numpy/lib/_nanfunctions_impl.py:1406: RuntimeWarning: All-NaN slice encountered
+  return _nanquantile_unchecked(
+[  1718s] 86/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0.1/s20869328 ok 79s
+[  1732s] 87/87 /data/dev/plexityper/alife/bq_lattice/sweep_out/runs/E_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0.1/s20869329 ok 77s
+/data/dev/plexityper/alife/bq_lattice/sweep.py:192: RuntimeWarning: Mean of empty slice
+  f.write(cn + f"\t{len(rs)}\t" + "\t".join(fmt(np.nanmean([np.nan if r[k] is None else r[k] for r in rs]))
+done in 1733s

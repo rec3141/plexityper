@@ -1,0 +1,33 @@
+# Allowlist: ignore everything, then include only shareable paths.
+# Never public: data/ (unpublished/collaborator/blinded), .agentworkforce/ (tokens),
+# discussion/papers/ (copyrighted papers), results/p2/ (real MAG data + sample coordinates),
+# dashboard/, tools/, .agents/ (local infra), plexichat.txt (private transcript, pending grid),
+# scratch/p6_obigt/ (third-party database extracts), large alife outputs.
+/*
+!/.gitignore
+!/README.md
+!/AGENTS.md
+!/waiting-on-grid.tsv
+!/protocols/
+!/notes/
+!/logs/
+!/discussion/
+/discussion/papers/
+/discussion/paywalled.tsv
+!/scratch/
+/scratch/p6_obigt/
+/scratch/deep/
+/scratch/*.log
+/scratch/*.err
+/scratch/snap.json
+!/alife/
+/alife/*/synthetic/
+/alife/*/truth/
+/alife/*/sweep_*/
+/alife/*/results/runs/
+/alife/multiscale_learning/results/
+!/results/
+/results/p2/
+**/__pycache__/
+*.pyc
+*.npz

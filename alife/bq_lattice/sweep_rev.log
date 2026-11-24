@@ -1,0 +1,35 @@
+[   295s] 1/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078949 ok 295s
+[   316s] 2/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21078948 ok 315s
+[   317s] 3/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755449 ok 317s
+[   321s] 4/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481868 ok 321s
+[   325s] 5/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20481869 ok 324s
+[   335s] 6/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21000829 ok 335s
+[   349s] 7/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21000828 ok 349s
+[   359s] 8/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20755448 ok 359s
+[   700s] 9/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20438368 ok 383s
+[   707s] 10/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s20337908 ok 411s
+[   712s] 11/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s20337909 ok 397s
+[   713s] 12/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434978 ok 364s
+[   714s] 13/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s21230548 ok 389s
+[   720s] 14/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20434979 ok 361s
+[   730s] 15/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/E_iota0_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s21230549 ok 395s
+[   740s] 16/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20438369 ok 418s
+[  1059s] 17/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21199058 ok 360s
+[  1060s] 18/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.2_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s21199059 ok 353s
+[  1065s] 19/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154619 ok 344s
+[  1072s] 20/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.08_D0.3_phi0.2_o_resp0.2_euk_frac0/s21154618 ok 358s
+[  1098s] 21/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323918 ok 385s
+[  1116s] 22/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.8_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0/s20323919 ok 403s
+[  1139s] 23/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s21243228 ok 409s
+[  1140s] 24/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0_o_resp0.2_euk_frac0/s21243229 ok 400s
+[  1430s] 25/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20607159 ok 369s
+[  1431s] 26/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812118 ok 292s
+[  1432s] 27/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.3_phi0.4_o_resp0.2_euk_frac0/s20607158 ok 372s
+[  1436s] 28/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20584469 ok 321s
+[  1437s] 29/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota1_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20812119 ok 297s
+[  1439s] 30/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/A_iota0_leak0.5_cost0.03_D0.05_phi0.2_o_resp0.2_euk_frac0/s20584468 ok 341s
+[  1448s] 31/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20814099 ok 375s
+[  1452s] 32/32 /data/dev/plexityper/alife/bq_lattice/sweep_rev/runs/E_iota1_leak0.5_cost0.03_D0.3_phi0.2_o_resp0.2_euk_frac0.1/s20814098 ok 388s
+/data/dev/plexityper/alife/bq_lattice/sweep.py:191: RuntimeWarning: Mean of empty slice
+  f.write(cn + f"\t{len(rs)}\t" + "\t".join(fmt(np.nanmean([np.nan if r[k] is None else r[k] for r in rs]))
+done in 1454s

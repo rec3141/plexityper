@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plexi Pond</title>
+<style>
+:root{
+  --bg:#f6f5f1; --panel:#ffffff; --ink:#1d1f24; --muted:#5f6670; --line:#d9d6cf;
+  --accent:#2a6fdb; --anab:#2a6fdb; --catab:#d07a12; --cyc:#d2334a; --ok:#1d8a4e; --warn:#b5651d;
+  --redund:#8a8f98; --sample:#111111; --field-lo:#f6f5f1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171b; --panel:#1e2127; --ink:#e7e7e3; --muted:#9aa1ab; --line:#353a42;
+    --accent:#6ea2ff; --anab:#6ea2ff; --catab:#f0a347; --cyc:#ff6b7d; --ok:#4fc283; --warn:#f0a347;
+    --redund:#8a8f98; --sample:#ffffff; --field-lo:#15171b;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15171b; --panel:#1e2127; --ink:#e7e7e3; --muted:#9aa1ab; --line:#353a42;
+  --accent:#6ea2ff; --anab:#6ea2ff; --catab:#f0a347; --cyc:#ff6b7d; --ok:#4fc283; --warn:#f0a347;
+  --redund:#8a8f98; --sample:#ffffff; --field-lo:#15171b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 16px;border-bottom:1px solid var(--line)}
+header h1{font-size:18px;margin:0}
+header .sub{color:var(--muted);font-size:12px}
+main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px;padding:12px 16px;max-width:1500px;margin:0 auto}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.panel h2{font-size:14px;margin:0 0 6px}
+.panel h3{font-size:13px;margin:8px 0 4px}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+canvas{display:block;width:100%;height:auto;border-radius:6px;touch-action:manipulation}
+#field{cursor:crosshair;border:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+button,select,input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 9px}
+button{cursor:pointer}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+.sliders{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:4px 14px}
+.sliders label{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}
+.sliders label span b{color:var(--ink);font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.stat .k{font-size:11px;color:var(--muted)}
+.stat .v{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:12px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:2px 5px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:500}
+.tablewrap{overflow-x:auto}
+.legend{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.sw{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+.note{font-size:12px;color:var(--muted)}
+.good{color:var(--ok);font-weight:600}.bad{color:var(--cyc);font-weight:600}.mid{color:var(--warn);font-weight:600}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:10px;padding:0 6px;margin-left:4px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar>div{height:100%;background:var(--accent);width:0}
+details summary{cursor:pointer;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Plexi Pond</h1>
+  <span class="sub">microbes, leaky metabolites, gene loss, and what a sample can and cannot tell you</span>
+  <span style="flex:1"></span>
+  <button id="themeBtn" title="Toggle light/dark">Theme</button>
+</header>
+<main>
+<div class="col">
+  <section class="panel">
+    <div class="row" style="margin-bottom:6px">
+      <button id="playBtn" class="primary">Pause</button>
+      <button id="stepBtn">Step</button>
+      <button id="resetBtn">Reset</button>
+      <label class="note">seed <input id="seed" type="number" value="1" style="width:70px"></label>
+      <label class="note">speed <input id="speed" type="range" min="1" max="12" value="4" style="width:80px;vertical-align:middle"></label>
+      <span class="note" id="tickLbl"></span>
+    </div>
+    <canvas id="field" width="576" height="384" aria-label="Simulation field"></canvas>
+    <div class="row" style="margin-top:6px">
+      <label class="note">background <select id="bgSel">
+        <option value="7">O2</option><option value="6">organic C</option><option value="8">H2</option>
+        <option value="5">fixed N</option><option value="0">B12</option><option value="1">B1</option>
+        <option value="2">B7</option><option value="3">Met</option><option value="4">Trp</option>
+        <option value="-1">none</option></select></label>
+      <label class="note">cells coloured by <select id="colSel">
+        <option value="geno">genotype</option><option value="d">required d (estimate)</option><option value="leak">private genes</option></select></label>
+      <label class="note">sample radius <input id="srad" type="range" min="2" max="14" value="6" style="width:70px;vertical-align:middle"></label>
+    </div>
+    <div class="row" style="margin-top:4px">
+      <span class="note">Tap the field to take a sample.</span>
+      <button id="auto8">8 random samples</button>
+      <button id="transect">transect (8)</button>
+      <button id="clearS">clear samples</button>
+      <button id="exportS" title="Download synthetic observation tables">export samples</button>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>World settings</h2>
+    <div class="sliders" id="sliders"></div>
+    <p class="note" style="margin:6px 0 0">Settings act on the running world immediately. Particles and seed take effect on Reset.</p>
+  </section>
+  <section class="panel">
+    <h2>Population</h2>
+    <div class="stats" id="stats"></div>
+    <canvas id="hist" width="600" height="110" style="margin-top:8px"></canvas>
+    <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>cells (scaled)</span><span><i class="sw" style="background:var(--cyc)"></i>% plexitrophic (required d ≥ 2 or cycle ≥ 3)</span><span><i class="sw" style="background:var(--redund)"></i>% using ≥ 2 suppliers</span></div>
+  </section>
+</div>
+<div class="col">
+  <section class="panel">
+    <h2>Ground truth: realised transfers vs required partners</h2>
+    <div class="row" style="margin-bottom:4px">
+      <label class="note">show <select id="truthMode">
+        <option value="req">required partners (necessity)</option>
+        <option value="used">realised transfers (who fed whom)</option></select></label>
+    </div>
+    <canvas id="truthG" width="560" height="360"></canvas>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--anab)"></i>anabolic (vitamin, amino acid, N)</span>
+      <span><i class="sw" style="background:var(--catab)"></i>catabolic (C, O2; H2 removal is shown but never required)</span>
+      <span><i class="sw" style="background:var(--cyc);height:4px"></i>cycle ≥ 3</span>
+      <span><i class="sw" style="background:var(--redund)"></i>substitutable (an alternative exists)</span>
+      <span>squares = eukaryotic algae</span>
+    </div>
+    <p class="note" id="truthSummary"></p>
+    <div class="tablewrap"><table id="truthTbl"></table></div>
+    <details style="margin-top:6px"><summary>Knock-out test: is a supplier actually required?</summary>
+      <p class="note">Clones the world, removes one supplier genotype (and blocks it from re-evolving), runs both copies forward with the same random stream, and compares the recipient's abundance. Necessity is decided by the counterfactual, not by who happened to deliver.</p>
+      <div class="row"><label class="note">recipient <select id="koSel"></select></label>
+        <label class="note">horizon <select id="koT"><option>400</option><option selected>800</option><option>1500</option></select></label>
+        <button id="koBtn">run knock-outs</button></div>
+      <div class="bar" style="margin-top:6px"><div id="koBar"></div></div>
+      <div id="koOut" class="note"></div>
+    </details>
+  </section>
+  <section class="panel">
+    <h2>Observer's view (from your samples only)</h2>
+    <div class="row" style="margin-bottom:4px">
+      <label class="note">association <select id="obsMode">
+        <option value="corr">co-occurrence (correlation)</option>
+        <option value="pcor">partial correlation (given all taxa)</option></select></label>
+      <label class="note">contig survival <input id="compl" type="range" min="50" max="100" value="85" style="width:70px;vertical-align:middle"> <b id="complV">85%</b></label>
+    </div>
+    <canvas id="obsG" width="560" height="320"></canvas>
+    <p class="note" id="obsSummary">Take some samples (tap the field) to build the observer's network.</p>
+  </section>
+  <section class="panel">
+    <h2>Challenges: prediction by synthesis</h2>
+    <div class="row"><select id="chSel"></select><button id="chReset">restart challenge</button></div>
+    <p class="note" id="chDesc"></p>
+    <div class="bar"><div id="chBar"></div></div>
+    <p id="chStatus" class="note"></p>
+    <div id="predBox" style="display:none">
+      <div class="row">
+        <label class="note">predicted % of cells plexitrophic at tick 4000 <input id="predPct" type="range" min="0" max="100" value="20" style="width:120px;vertical-align:middle"> <b id="predPctV">20%</b></label>
+        <label class="note">predicted architecture <select id="predTopo"><option>none</option><option>chain</option><option>fan-in</option><option>hub</option><option>tree</option><option>mesh</option></select></label>
+        <button id="predRun" class="primary">run 3 seeds</button>
+      </div>
+      <div class="bar" style="margin-top:6px"><div id="predBar"></div></div>
+      <div id="predOut" class="note"></div>
+    </div>
+    <div id="scoreLog" class="note"></div>
+  </section>
+</div>
+</main>
+
+<!-- ======================= SIMULATION CORE (no DOM; also run headless by headless_test.js) ======================= -->
+<script id="core">
+"use strict";
+var PlexiCore = (function(){
+  // Genes. 0..5 make the six essential metabolites (channel index = gene index).
+  var GENES = ['B12','B1','B7','Met','Trp','Nif','Photo','Resp','Ferm','Hyd'];
+  var NG = 10, ESS = 6;
+  var CH = ['B12','B1','B7','Met','Trp','N','C','O2','H2'];
+  var NCH = 9, C_C = 6, C_O2 = 7, C_H2 = 8;
+  var G_NIF = 5, G_PHOTO = 6, G_RESP = 7, G_FERM = 8, G_HYD = 9;
+  var B_PHOTO = 1<<G_PHOTO, B_RESP = 1<<G_RESP, B_FERM = 1<<G_FERM, B_HYD = 1<<G_HYD;
+  var ENERGY = B_PHOTO|B_RESP|B_FERM|B_HYD;
+  // Bit 10 marks a eukaryotic alga: large, phototrophic, leaks organic C and metabolites,
+  // and cannot make cobalamin, nitrogenase or hydrogenase (so it needs B12 and fixed N from others).
+  var G_EUK = 10, B_EUK = 1<<G_EUK, EUK_FORBID = (1<<0)|(1<<G_NIF)|(1<<G_HYD), NGT = 2048;
+  // Oxygen-sensitive functions: anaerobic cobamide route, nitrogenase, uptake hydrogenase.
+  var O2SENS = (1<<0)|(1<<G_NIF)|(1<<G_HYD);
+  var GCOST = [1.4,1,1,1.2,1.2,3,2,1,1,1];       // relative cost of carrying each gene
+  var DCH = [0.5,0.8,0.8,0.7,0.7,1,0.8,1.2,1.3]; // relative diffusivity (big cofactors slower)
+  // Illustrative representative KOs for synthetic exports (check before any real use).
+  var KO = ['K00768','K03147','K01012','K00549','K01657','K02588','K02703','K02274','K00532','K06281'];
+  var W = 96, H = 64, N = W*H, BS = 8, BW = W/BS, BH = H/BS, NB = BW*BH, NS = 128, CAP = 2600;
+  // Kinetic constants (arbitrary units; one tick ~ a fraction of a generation).
+  var K = {PROD:0.04, Q:0.1, STMAX:0.3, UPF:0.3, UMAX:0.03, EG:0.3, MDIV:8, MAINT:0.004,
+           DEATH:0.004, ECAP:3, KO2:0.12, KH2:0.3, PRIV:0.6, CUP:0.05, YRESP:4, YFERM:1, YHYD:1.5,
+           THETA:0.15, THETA_REQ:0.05};
+
+  function defaults(){
+    return {leak:0.5, geneCost:0.5, diffusion:0.4, incompat:0.8, mixing:0.05, supply:0.5,
+            nSupply:0.25, light:0.6, aeration:0.3, particles:0, mutation:0.5, cap:2000};
+  }
+  function RNG(seed){ this.a = (seed>>>0) || 1; }
+  RNG.prototype.next = function(){ var a=this.a=(this.a+0x6D2B79F5)|0; var t=Math.imul(a^(a>>>15),1|a);
+    t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; };
+  function popc(x){ var c=0; while(x){ x&=x-1; c++; } return c; }
+  function hash32(a,b,c){ var h = Math.imul(a^0x9e3779b9, 0x85ebca6b) ^ Math.imul(b+0x632be5ab, 0xc2b2ae35) ^ Math.imul(c+7, 0x27d4eb2f);
+    h ^= h>>>15; h = Math.imul(h, 0x2c1b3c6d); h ^= h>>>12; return (h>>>0)/4294967296; }
+
+  function create(params, seed){
+    var S = {P:Object.assign(defaults(), params||{}), seed:seed||1, tick:0};
+    S.rng = new RNG(S.seed*2654435761 + 12345);
+    S.f = new Float32Array(NCH*N); S.tmp = new Float32Array(N);
+    S.kx = new Float32Array(N); S.ky = new Float32Array(N); S.pmask = new Uint8Array(N);
+    S.ax = new Float32Array(CAP); S.ay = new Float32Array(CAP); S.E = new Float32Array(CAP);
+    S.mass = new Float32Array(CAP); S.st = new Float32Array(CAP*ESS);
+    S.gen = new Uint16Array(CAP); S.lk = new Uint16Array(CAP); S.slot = new Uint8Array(CAP);
+    S.n = 0;
+    S.gcount = new Int32Array(NGT); S.slotOf = new Int16Array(NGT).fill(-1);
+    S.slotGen = new Int16Array(NS).fill(-1); S.free = [];
+    for (var s=NS-1; s>=2; s--) S.free.push(s);
+    S.rel = new Float32Array(NB*NS*NCH); S.U = new Float32Array(NB*NS*NCH);
+    S.F = new Float32Array(NS*NS*NCH); S.I = new Float32Array(NS*NCH);
+    S.RT = new Float32Array(NS*NCH); S.SP = new Float32Array(NS*NCH); S.PP = new Float32Array(NS*NCH); S.EN = new Float32Array(NS*NCH);
+    S.banned = new Uint8Array(NGT);
+    S.light = new Float32Array(H);
+    for (var y=0;y<H;y++) S.light[y] = Math.exp(-3.2*(y+0.5)/H);
+    S.particles = [];
+    buildParticles(S);
+    // Founders: prototrophs (all biosynthesis + Nif), three energy strategies, all genes leaky.
+    var ALLB = (1<<ESS)-1;
+    var founders = [ALLB|B_PHOTO, ALLB|B_RESP|B_FERM, ALLB|B_FERM|B_HYD, ALLB|B_RESP];
+    for (var i=0;i<480;i++){
+      var g = founders[i%founders.length];
+      var yy = (g&B_PHOTO) ? S.rng.next()*H*0.4 : S.rng.next()*H;
+      var j = addAgent(S, S.rng.next()*W, yy, g, 0x3ff, 1.0);
+      for (var k=0;k<ESS;k++) S.st[j*ESS+k] = K.Q*2;
+    }
+    var ALGA = B_EUK|B_PHOTO|B_RESP|0x1e;   // makes B1, B7, Met, Trp; needs B12 and fixed N
+    for (var a=0;a<40;a++){
+      var ja = addAgent(S, S.rng.next()*W, S.rng.next()*H*0.35, ALGA, 0x3ff, 1.5);
+      for (var ka=0;ka<ESS;ka++) S.st[ja*ESS+ka] = K.Q*3;
+    }
+    for (var c=0;c<N;c++){ S.f[C_C*N+c] = 0.2; S.f[C_O2*N+c] = 0.05; S.f[5*N+c]=0.05; }
+    return S;
+  }
+
+  function buildParticles(S){
+    S.pmask.fill(0); S.particles = [];
+    var r = new RNG(S.seed*7919+3);
+    var np = Math.round(S.P.particles);
+    for (var p=0;p<np;p++){
+      var px = 6 + r.next()*(W-12), py = 6 + r.next()*(H-12), pr = 2.5 + r.next()*3.5;
+      S.particles.push([px,py,pr]);
+      for (var y=0;y<H;y++) for (var x=0;x<W;x++){
+        var dx=x+0.5-px, dy=y+0.5-py; if (dx*dx+dy*dy <= pr*pr) S.pmask[y*W+x]=1;
+      }
+    }
+    for (var i=0;i<N;i++){
+      var x = i%W, y = (i/W)|0;
+      var ki = S.pmask[i] ? 0.08 : 1;
+      S.kx[i] = (x<W-1) ? Math.min(ki, S.pmask[i+1] ? 0.08 : 1) : 0;
+      S.ky[i] = (y<H-1) ? Math.min(ki, S.pmask[i+W] ? 0.08 : 1) : 0;
+    }
+  }
+
+  function slotFor(S, g){
+    var s = S.slotOf[g];
+    if (s >= 0) return s;
+    if (S.free.length){ s = S.free.pop(); S.slotOf[g]=s; S.slotGen[s]=g; clearSlot(S,s); return s; }
+    return 1; // overflow bucket ("other genotypes")
+  }
+  function clearSlot(S, s){
+    for (var r=0;r<NS;r++) for (var c=0;c<NCH;c++){ S.F[(s*NS+r)*NCH+c]=0; S.F[(r*NS+s)*NCH+c]=0; }
+    for (var c2=0;c2<NCH;c2++){ S.I[s*NCH+c2]=0; S.RT[s*NCH+c2]=0; S.SP[s*NCH+c2]=0; S.PP[s*NCH+c2]=0; S.EN[s*NCH+c2]=0; }
+    for (var b=0;b<NB;b++) for (var c3=0;c3<NCH;c3++){ S.rel[(b*NS+s)*NCH+c3]=0; S.U[(b*NS+s)*NCH+c3]=0; }
+  }
+  function addAgent(S, x, y, g, l, e){
+    if (S.n >= CAP) return -1;
+    var i = S.n++;
+    S.ax[i]=x; S.ay[i]=y; S.gen[i]=g; S.lk[i]=l; S.E[i]=e; S.mass[i]=0;
+    for (var k=0;k<ESS;k++) S.st[i*ESS+k]=0;
+    S.gcount[g]++; S.slot[i]=slotFor(S,g);
+    return i;
+  }
+  function removeAgent(S, i){
+    S.gcount[S.gen[i]]--;
+    var last = --S.n;
+    if (i !== last){
+      S.ax[i]=S.ax[last]; S.ay[i]=S.ay[last]; S.gen[i]=S.gen[last]; S.lk[i]=S.lk[last];
+      S.E[i]=S.E[last]; S.mass[i]=S.mass[last]; S.slot[i]=S.slot[last];
+      for (var k=0;k<ESS;k++) S.st[i*ESS+k]=S.st[last*ESS+k];
+    }
+  }
+  function mutate(S, g, l){
+    var mu = S.P.mutation*0.02, R = S.rng;
+    for (var k=0;k<NG;k++){
+      var b = 1<<k;
+      if (g & b){ if (R.next() < mu) g &= ~b; }           // gene loss (deletion)
+      else if (!((g & B_EUK) && (EUK_FORBID & b)) && R.next() < mu*0.05){ g |= b; l |= b; } // rare re-acquisition (HGT), arrives leaky
+    }
+    if (R.next() < mu*0.5) l ^= 1 << ((R.next()*NG)|0);   // leaky <-> private switch
+    return [g, l];
+  }
+
+  function step(S){
+    var P = S.P, f = S.f, R = S.rng, rel = S.rel, U = S.U;
+    S.tick++;
+    var lam = P.leak, gc = P.geneCost*0.004;
+    // --- abiotic supply (attributed to slot 0 = medium) ---
+    var cS = P.supply*0.004, nS = P.nSupply*0.002;
+    for (var c=0;c<N;c++){
+      var add = cS*(S.pmask[c] ? 6 : 1);
+      f[C_C*N+c] += add; f[5*N+c] += nS;
+      var b0 = (((c/W)|0)>>3)*BW + ((c%W)>>3);
+      rel[(b0*NS)*NCH+C_C] += add; rel[(b0*NS)*NCH+5] += nS;
+    }
+    var o2sat = 0.6*P.aeration;
+    for (var x=0;x<W;x++){
+      var o = C_O2*N+x, d = 0.15*(o2sat - f[o]);
+      f[o] += d; if (d>0) rel[((x>>3)*NS)*NCH+C_O2] += d;
+      f[C_H2*N+x] *= 0.85;
+    }
+    // --- agents ---
+    var sigma = 0.12 + 2.5*P.mixing, tele = P.mixing*0.01;
+    var st = S.st, cap = Math.min(P.cap, CAP);
+    for (var i=S.n-1;i>=0;i--){
+      var px = S.ax[i], py = S.ay[i];
+      var ci0 = (py|0)*W + (px|0), euk = (S.gen[i] & B_EUK) !== 0;
+      var sg = (S.pmask[ci0] ? sigma*0.12 : sigma) * (euk ? 0.4 : 1);
+      px += (R.next()*2-1)*sg; py += (R.next()*2-1)*sg;
+      if (R.next() < tele){ px = R.next()*W; py = R.next()*H; }
+      if (px<0) px=-px; if (px>=W) px=2*W-px-0.001; if (py<0) py=-py; if (py>=H) py=2*H-py-0.001;
+      if (px<0||px>=W) px=W*0.5; if (py<0||py>=H) py=H*0.5;
+      S.ax[i]=px; S.ay[i]=py;
+      var yi = py|0, ci = yi*W + (px|0);
+      var b = (yi>>3)*BW + ((px|0)>>3);
+      var g = S.gen[i], l = S.lk[i], s = S.slot[i];
+      var bs = (b*NS+s)*NCH;
+      var o2 = f[C_O2*N+ci];
+      var sens = Math.exp(-o2/K.KO2) * ((g & B_PHOTO) ? (1-P.incompat) : 1);
+      var e = 0, cost = K.MAINT;
+      for (var k=0;k<NG;k++) if (g & (1<<k)) cost += gc*GCOST[k]*((l>>k)&1 ? 1 : 1+K.PRIV);
+      // Oxygenic photosynthesis: light -> energy, O2 released, some fixed C exuded if leaky.
+      if (g & B_PHOTO){
+        var Il = P.light*S.light[yi], fix = (euk ? 0.2 : 0.1)*Il;
+        // algae exude a large share of fixed C regardless of the leak bit (overflow photosynthate)
+        var ex = euk ? fix*(0.3+0.3*lam) : (((l>>G_PHOTO)&1) ? fix*0.5*lam : 0);
+        e += (fix-ex)*0.8;
+        var o2p = (euk ? 0.15 : 0.06)*Il;
+        f[C_O2*N+ci] += o2p; rel[bs+C_O2] += o2p; S.RT[s*NCH+C_O2] += o2p;
+        if (ex>0){ f[C_C*N+ci] += ex; rel[bs+C_C] += ex; S.RT[s*NCH+C_C] += ex; }
+      }
+      // Heterotrophy on organic C: aerobic respiration (needs O2) and/or fermentation (makes H2).
+      if (g & (B_RESP|B_FERM)){
+        var cI = C_C*N+ci, u = Math.min(f[cI]*0.5, K.CUP), used = 0;
+        if (g & B_RESP){
+          var oI = C_O2*N+ci, ox = Math.min(f[oI]*0.5, u);
+          f[oI] -= ox; e += ox*K.YRESP; used += ox; U[bs+C_O2] += ox;
+        }
+        if (g & B_FERM){
+          var rem = u-used;
+          if (rem>0){ var hI = C_H2*N+ci;
+            e += rem*K.YFERM/(1+f[hI]/K.KH2);              // H2 build-up makes fermentation unfavourable
+            f[hI] += rem*0.5; rel[bs+C_H2] += rem*0.5; S.RT[s*NCH+C_H2] += rem*0.5; used += rem; }
+        }
+        f[cI] -= used; U[bs+C_C] += used;
+      }
+      if (g & B_HYD){
+        var hI2 = C_H2*N+ci, h = Math.min(f[hI2]*0.5, 0.03)*sens;
+        f[hI2] -= h; e += h*K.YHYD; U[bs+C_H2] += h;
+      }
+      // Biosynthesis of the six essentials; leaky genes release a fraction lam of product.
+      var so = i*ESS, okGrow = true;
+      for (var k2=0;k2<ESS;k2++){
+        var gb = 1<<k2;
+        if (g & gb){
+          var act = (O2SENS & gb) ? sens : 1, p = K.PROD*act*(euk ? 2 : 1);
+          var r = ((l>>k2)&1) ? p*lam : 0;
+          st[so+k2] += p-r; S.SP[s*NCH+k2] += act; S.PP[s*NCH+k2] += 1;   // realised vs potential enzyme activity
+          S.EN[s*NCH+k2] += p-r;                                          // endogenous supply kept
+          if (r>0){ f[k2*N+ci] += r; rel[bs+k2] += r; S.RT[s*NCH+k2] += r; }
+        }
+        var def = K.STMAX - st[so+k2];
+        if (def > 0){
+          var fi = k2*N+ci, uu = Math.min(f[fi]*K.UPF, def, K.UMAX);
+          if (uu > 1e-7){ f[fi] -= uu; st[so+k2] += uu; U[bs+k2] += uu; }
+        } else st[so+k2] = K.STMAX;
+        if (st[so+k2] < K.Q) okGrow = false;
+      }
+      var En = S.E[i] + e - cost;
+      if (En > K.ECAP) En = K.ECAP;
+      if (okGrow && En >= K.EG){
+        for (var k3=0;k3<ESS;k3++) st[so+k3] -= K.Q;
+        En -= K.EG; S.mass[i] += 1;
+      }
+      S.E[i] = En;
+      if (En < 0 || R.next() < (euk ? K.DEATH*0.5 : K.DEATH)){ removeAgent(S, i); continue; }
+      if (S.mass[i] >= (euk ? 2*K.MDIV : K.MDIV) && S.n < cap){
+        S.mass[i] = 0; S.E[i] = En*0.5;
+        var m = mutate(S, g, l);
+        if (S.banned[m[0]]) m = [g, l];                    // knocked-out genotype may not re-evolve
+        if (S.banned[g]) continue;
+        var j = addAgent(S, px+(R.next()-0.5), py+(R.next()-0.5), m[0], m[1], En*0.5);
+        if (j >= 0){
+          if (S.ax[j]<0) S.ax[j]=0.01; if (S.ax[j]>=W) S.ax[j]=W-0.01;
+          if (S.ay[j]<0) S.ay[j]=0.01; if (S.ay[j]>=H) S.ay[j]=H-0.01;
+          for (var k4=0;k4<ESS;k4++){ var half = st[so+k4]*0.5; st[so+k4]=half; st[j*ESS+k4]=half; }
+        }
+      }
+    }
+    diffuse(S);
+    if (S.tick % 5 === 0) attribute(S);
+    if (S.tick % 20 === 0) housekeeping(S);
+  }
+
+  function diffuse(S){
+    var P = S.P, f = S.f, t = S.tmp, kx = S.kx, ky = S.ky;
+    var Ds = 0.02 + 0.2*P.diffusion, mixK = P.mixing*0.08;
+    for (var ch=0; ch<NCH; ch++){
+      var D = Math.min(0.24, Ds*DCH[ch]), off = ch*N, dil = (ch===C_C) ? 0.003 : 0.005;
+      for (var i=0;i<N;i++){
+        var c = f[off+i], sum = 0;
+        if (kx[i]) sum += kx[i]*(f[off+i+1]-c);
+        if (i>0 && kx[i-1]) sum += kx[i-1]*(f[off+i-1]-c);
+        if (ky[i]) sum += ky[i]*(f[off+i+W]-c);
+        if (i>=W && ky[i-W]) sum += ky[i-W]*(f[off+i-W]-c);
+        t[i] = (c + D*sum)*(1-dil);
+      }
+      if (mixK > 0){
+        var mean = 0; for (var i2=0;i2<N;i2++) mean += t[i2]; mean /= N;
+        for (var i3=0;i3<N;i3++) f[off+i3] = t[i3] + mixK*(mean - t[i3]);
+      } else f.set(t, off);
+    }
+  }
+
+  // Realised-transfer bookkeeping: uptake in block b is credited to the genotypes that released
+  // that metabolite recently in b and its 4 neighbours, in proportion to release (an approximation).
+  function attribute(S){
+    var act = [0,1];
+    for (var s=2;s<NS;s++) if (S.slotGen[s] >= 0) act.push(s);
+    var F = S.F, I = S.I, rel = S.rel, U = S.U, DF = 0.97, na = act.length;
+    for (var q=0;q<F.length;q++) F[q] *= DF;
+    for (var q2=0;q2<I.length;q2++){ I[q2]*=DF; S.RT[q2]*=DF; S.SP[q2]*=DF; S.PP[q2]*=DF; S.EN[q2]*=DF; }
+    var eff = new Float32Array(NS);
+    for (var b=0;b<NB;b++){
+      var bx = b%BW, by = (b/BW)|0;
+      var nbs = [b]; if (bx>0) nbs.push(b-1); if (bx<BW-1) nbs.push(b+1); if (by>0) nbs.push(b-BW); if (by<BH-1) nbs.push(b+BW);
+      for (var ch=0;ch<NCH;ch++){
+        var any = false;
+        for (var a=0;a<na;a++){ if (U[(b*NS+act[a])*NCH+ch] > 0){ any = true; break; } }
+        if (!any) continue;
+        var T = 0;
+        for (var a2=0;a2<na;a2++){
+          var s2 = act[a2], v = 0;
+          for (var z=0;z<nbs.length;z++) v += rel[(nbs[z]*NS+s2)*NCH+ch]*(z===0?1:0.5);
+          eff[s2] = v; T += v;
+        }
+        for (var a3=0;a3<na;a3++){
+          var r = act[a3], u = U[(b*NS+r)*NCH+ch];
+          if (u <= 0) continue;
+          I[r*NCH+ch] += u;
+          if (T <= 0) continue;
+          for (var a4=0;a4<na;a4++){
+            var s3 = act[a4]; if (s3===r || eff[s3]<=0) continue;
+            F[(s3*NS+r)*NCH+ch] += u*eff[s3]/T;
+          }
+        }
+      }
+    }
+    for (var q3=0;q3<rel.length;q3++) rel[q3] *= 0.7;
+    U.fill(0);
+  }
+  function housekeeping(S){
+    for (var s=2;s<NS;s++){
+      var g = S.slotGen[s];
+      if (g >= 0 && S.gcount[g] === 0){ S.slotOf[g] = -1; S.slotGen[s] = -1; S.free.push(s); }
+    }
+  }
+
+  // ---------------- ground-truth analysis ----------------
+  function minCover(reqs){
+    // reqs: array of arrays of donor ids (OR within a requirement, AND across requirements).
+    // Exact minimum set cover by dynamic programming over requirement bitmasks (requirements are
+    // few, donors are not capped). Returns feasible:false (d = NaN) when some requirement has no
+    // donor at all; that is a different state from d = 0 (no requirement: autonomous).
+    var R = reqs.length;
+    if (!R) return {d:0, set:[], feasible:true};
+    if (R > 20) throw new Error('minCover: too many requirements');
+    for (var q=0;q<R;q++) if (!reqs[q].length) return {d:NaN, set:[], feasible:false};
+    var dm = {};                                      // donor -> mask of requirements it serves
+    reqs.forEach(function(rq, j){ rq.forEach(function(d){ dm[d] = (dm[d]||0) | (1<<j); }); });
+    var byMask = {};                                  // keep one representative donor per mask
+    Object.keys(dm).forEach(function(d){ if (!(dm[d] in byMask)) byMask[dm[d]] = d; });
+    var masks = Object.keys(byMask).map(Number), full = (1<<R)-1, SZ = 1<<R;
+    var dp = new Int16Array(SZ).fill(32767), prev = new Int32Array(SZ).fill(-1), via = new Int32Array(SZ).fill(-1);
+    dp[0] = 0;
+    for (var m=0; m<SZ; m++){                         // OR never decreases a mask, so one pass suffices
+      if (dp[m] === 32767) continue;
+      for (var k=0;k<masks.length;k++){
+        var nm = m | masks[k];
+        if (nm !== m && dp[m]+1 < dp[nm]){ dp[nm] = dp[m]+1; prev[nm] = m; via[nm] = k; }
+      }
+    }
+    var set = [], cur = full;
+    while (cur > 0){ var d0 = byMask[masks[via[cur]]]; set.push(isNaN(+d0) ? d0 : +d0); cur = prev[cur]; }
+    return {d:dp[full], set:set, feasible:true};
+  }
+
+  function findCycles(nn, adj, maxLen){
+    // simple directed cycles of length >= 3 among nodes 0..nn-1; adj[i] = array of successors
+    var cycles = [], path = [], onp = new Uint8Array(nn), budget = 20000;
+    function dfs(start, v){
+      if (--budget < 0 || cycles.length >= 60) return;
+      for (var q=0;q<adj[v].length;q++){
+        var w = adj[v][q];
+        if (w === start && path.length >= 3){ cycles.push(path.slice()); continue; }
+        if (w <= start || onp[w] || path.length >= maxLen) continue;
+        onp[w]=1; path.push(w); dfs(start, w); path.pop(); onp[w]=0;
+      }
+    }
+    for (var s=0;s<nn;s++){ path=[s]; onp[s]=1; dfs(s,s); onp[s]=0; }
+    return cycles;
+  }
+
+  function classify(nn, pairs){
+    // pairs: list of [from,to] (directed, unique). Returns architecture label (plain words).
+    if (!pairs.length) return 'none';
+    var adj = []; for (var i=0;i<nn;i++) adj.push([]);
+    pairs.forEach(function(p){ adj[p[0]].push(p[1]); });
+    if (findCycles(nn, adj, 8).length) return 'mesh';
+    var und = {}, deg = new Int32Array(nn), indeg = new Int32Array(nn), outdeg = new Int32Array(nn), E = 0;
+    pairs.forEach(function(p){ indeg[p[1]]++; outdeg[p[0]]++;
+      var a=Math.min(p[0],p[1]), b=Math.max(p[0],p[1]), key=a+','+b;
+      if (!und[key]){ und[key]=1; deg[a]++; deg[b]++; E++; } });
+    // undirected cycle (reticulation) via union-find
+    var par = []; for (var j=0;j<nn;j++) par.push(j);
+    function fd(x){ while(par[x]!==x){ par[x]=par[par[x]]; x=par[x]; } return x; }
+    var retic = false;
+    Object.keys(und).forEach(function(k){ var ab=k.split(','), ra=fd(+ab[0]), rb=fd(+ab[1]); if (ra===rb) retic=true; else par[ra]=rb; });
+    if (retic) return 'mesh';
+    var maxdeg = 0, hub = -1; for (var v=0;v<nn;v++) if (deg[v]>maxdeg){ maxdeg=deg[v]; hub=v; }
+    var maxin = 0; for (var v2=0;v2<nn;v2++) maxin = Math.max(maxin, indeg[v2]);
+    if (maxdeg >= 3) return (deg[hub] >= 0.6*E) ? 'hub' : 'tree';
+    if (maxin >= 2) return 'fan-in';
+    return 'chain';
+  }
+
+  function energyOnly(g){ return g & ENERGY; }
+
+  function analyze(S, opt){
+    opt = opt || {};
+    var minCount = opt.minCount || 4, maxNodes = opt.maxNodes || 40, TH = K.THETA;
+    var nodes = [];
+    for (var s=2;s<NS;s++){ var g=S.slotGen[s]; if (g>=0 && S.gcount[g]>=minCount) nodes.push({slot:s, g:g, count:S.gcount[g]}); }
+    nodes.sort(function(a,b){ return b.count-a.count; });
+    nodes = nodes.slice(0, maxNodes);
+    var nIdx = {}; nodes.forEach(function(nd,i){ nIdx[nd.slot]=i; });
+    var used = [], req = [];   // realised edges, required-partner edges
+    var F = S.F, I = S.I;
+    nodes.forEach(function(nd, ri){
+      var r = nd.slot, g = nd.g;
+      var anab = [], catab = [], donorsUsed = {}, unres = 0, reqShares = [];
+      nd.reqs = []; var shareOf = {};
+      // Shares are fractions of the TOTAL cellular supply of a channel (endogenous + imported), so a
+      // prototroph that scavenges a trace of leakage does not register a supplier. Channels are
+      // classified as required BEFORE suppliers are counted: realised transfers on required channels
+      // count toward `used`; transfers on other channels are drawn as opportunistic and never counted.
+      function handle(ch, kind, required, total, fluxFn){
+        var ds = [], perDonor = {};
+        for (var q=0;q<nodes.length;q++){ if (q===ri) continue;
+          var sh = fluxFn(nodes[q].slot)/total;
+          if (required && sh >= K.THETA_REQ){ ds.push(q); shareOf[ch+':'+q] = sh; }   // alternative supplier
+          if (sh >= TH){
+            used.push({from:q, to:ri, ch:ch, share:sh, kind:kind, opp:!required});
+            if (required){ donorsUsed[q] = 1; perDonor[q] = sh; } } }
+        if (required) reqShares.push(perDonor);
+        return ds;
+      }
+      for (var ch=0; ch<ESS; ch++){
+        var Ii = I[r*NCH+ch], tot = Ii + S.EN[r*NCH+ch], pp = S.PP[r*NCH+ch];
+        if (tot < 1e-6) continue;
+        // dependent = gene absent, or present but mostly switched off (O2 inhibition / incompatibility)
+        var dependent = !(g & (1<<ch)) || (pp > 0 && S.SP[r*NCH+ch]/pp < 0.3);
+        var external = F[(0*NS+r)*NCH+ch]/tot >= 0.5;
+        var ds = handle(ch, 'anab', dependent && !external, tot, function(s2){ return F[(s2*NS+r)*NCH+ch]; });
+        if (!dependent || external) continue;
+        if (!ds.length){ unres++; continue; }
+        anab.push(ds); nd.reqs.push({ch:ch, donors:ds, kind:'anab'});
+      }
+      var en = energyOnly(g);
+      if (g & (B_RESP|B_FERM)){
+        var Ic = I[r*NCH+C_C];
+        if (Ic > 1e-6){
+          var reqC = !(g & B_PHOTO) && F[r*NCH+C_C]/Ic < 0.5;     // F[slot 0] = medium share
+          var dsc = handle(C_C, 'catab', reqC, Ic, function(s2){ return F[(s2*NS+r)*NCH+C_C]; });
+          if (reqC){ if (dsc.length){ catab.push(dsc); nd.reqs.push({ch:C_C, donors:dsc, kind:'catab'}); } else unres++; }
+        }
+      }
+      if (g & B_RESP){
+        var Io = I[r*NCH+C_O2];
+        if (Io > 1e-6){
+          var reqO = en === B_RESP && F[r*NCH+C_O2]/Io < 0.5;      // only obligate respirers need O2
+          var dso = handle(C_O2, 'catab', reqO, Io, function(s2){ return F[(s2*NS+r)*NCH+C_O2]; });
+          if (reqO){ if (dso.length){ catab.push(dso); nd.reqs.push({ch:C_O2, donors:dso, kind:'catab'}); } else unres++; }
+        }
+      }
+      if (g & B_FERM){
+        // H2 removal by a sink is a realised service but never a requirement: in step() fermentation
+        // yield only falls with H2 (1/(1+H2/K)), and H2 also escapes and decays abiotically.
+        var Rh = S.RT[r*NCH+C_H2];
+        if (Rh > 1e-6) handle(C_H2, 'catab', false, Rh, function(s2){ return F[(r*NS+s2)*NCH+C_H2]; });
+      }
+      nd.dUsed = Object.keys(donorsUsed).length;          // realised suppliers on required channels
+      // d_eff: equal weight per required resource; each donor's weighted shares are summed, then the
+      // inverse-Simpson effective number is taken over donors. 1 <= d_eff <= dUsed (0 if dUsed = 0).
+      var wsum = {}, R = reqShares.length;
+      reqShares.forEach(function(pd){ Object.keys(pd).forEach(function(q){ wsum[q] = (wsum[q]||0) + pd[q]/R; }); });
+      var tw = 0, hh = 0; Object.keys(wsum).forEach(function(q){ tw += wsum[q]; });
+      Object.keys(wsum).forEach(function(q){ var x = wsum[q]/tw; hh += x*x; });
+      nd.dEff = tw > 0 ? 1/hh : 0;
+      nd.dA = minCover(anab).d; nd.dC = minCover(catab).d;
+      var all = minCover(anab.concat(catab)); nd.dT = all.d; nd.coverSet = all.set;
+      nd.unres = unres; nd.feasible = all.feasible; nd.aux = anab.length > 0 || popc(g & ((1<<ESS)-1)) < ESS;
+      // Required-partner edges (estimate): a donor is "required" when it is the only listed donor
+      // for some requirement; donors in a requirement with alternatives are substitutable.
+      nd.reqs.forEach(function(rq){
+        rq.donors.forEach(function(q){
+          var sh = shareOf[rq.ch+':'+q] || 0;
+          req.push({from:q, to:ri, ch:rq.ch, kind:rq.kind, share:sh, major: sh >= TH, sole: rq.donors.length===1});
+        });
+      });
+    });
+    // Cycles >= 3. HEURISTIC: only sole-supplier edges are searched. That is the coordinatewise
+    // shortcut that discussion/deep/plexitrophy-computation.md (A1/F3) shows can miss cycles which
+    // exist only in alternative supports; a per-support evaluation is not implemented here.
+    function cyc(edges, filt){
+      var adj = nodes.map(function(){ return []; }), seen = {};
+      edges.forEach(function(e){ if (filt && !filt(e)) return; var k=e.from+'>'+e.to; if (!seen[k]){ seen[k]=1; adj[e.from].push(e.to); } });
+      return findCycles(nodes.length, adj, 8);
+    }
+    var reqCycles = cyc(req, function(e){ return e.sole; });
+    var usedCycles = cyc(used, function(e){ return !e.opp; });
+    var inCyc = new Uint8Array(nodes.length);
+    reqCycles.forEach(function(c){ c.forEach(function(v){ inCyc[v]=1; }); });
+    var cycEdge = {};
+    reqCycles.forEach(function(c){ for (var q=0;q<c.length;q++) cycEdge[c[q]+'>'+c[(q+1)%c.length]] = 1; });
+    // Denominators. "covered" cells = cells of the analysed genotypes (>= minCount cells, top
+    // maxNodes). A genotype is "resolved" when every requirement has a listed supplier, or when
+    // d_total >= 2 already holds (adding requirements can only raise a minimum cover, so the call
+    // is safe). Unresolved genotypes are left out of the plexitrophy fractions, not counted as 0.
+    var tot = 0, resolvedCells = 0, plexi = 0, auxCells = 0, fan = 0, multiUse = 0, redundant = 0;
+    nodes.forEach(function(nd,i){
+      nd.inCycle = !!inCyc[i];
+      nd.plexi = nd.dT >= 2 || nd.inCycle;
+      nd.resolved = nd.unres === 0 || nd.plexi;
+      nd.redundantOnly = nd.resolved && nd.dUsed >= 2 && !nd.plexi;
+      tot += nd.count;
+      if (nd.dUsed >= 2) multiUse += nd.count;
+      if (!nd.resolved) return;
+      resolvedCells += nd.count;
+      if (nd.plexi) plexi += nd.count;
+      if (nd.redundantOnly) redundant += nd.count;
+      var isAux = nd.reqs.some(function(r){ return r.kind==='anab'; });
+      if (isAux){ auxCells += nd.count; if (nd.dA >= 2) fan += nd.count; }
+    });
+    // Architecture labels use the 12 most abundant genotypes (the same scale the observer sees).
+    var TOPN = Math.min(12, nodes.length);
+    function pairsOf(edges, filt){ var seen={}, out=[]; edges.forEach(function(e){ if (e.from>=TOPN || e.to>=TOPN) return; if (filt && !filt(e)) return; var k=e.from+'>'+e.to; if(!seen[k]){ seen[k]=1; out.push([e.from,e.to]); } }); return out; }
+    return {tick:S.tick, n:S.n, nodes:nodes, used:used, req:req, cycEdge:cycEdge,
+      reqCycles:reqCycles, usedCycles:usedCycles,
+      // plexiFrac, redundantFrac: over resolved cells; fanInFrac: over resolved auxotroph cells;
+      // multiUseFrac: over covered cells. All are live, threshold-based estimates.
+      plexiFrac: resolvedCells? plexi/resolvedCells : 0, multiUseFrac: tot? multiUse/tot : 0,
+      redundantFrac: resolvedCells? redundant/resolvedCells : 0,
+      fanInFrac: auxCells? fan/auxCells : 0, auxCells:auxCells, covered:tot, resolvedCells:resolvedCells,
+      coverage: S.n ? tot/S.n : 0, resolvedFrac: tot ? resolvedCells/tot : 0,
+      topoReq: classify(TOPN, pairsOf(req, function(e){ return e.major || e.sole; })),
+      topoUsed: classify(TOPN, pairsOf(used, function(e){ return !e.opp; })),
+      nGenotypes: countGenotypes(S)};
+  }
+  function countGenotypes(S){ var c=0; for (var g=0; g<NGT; g++) if (S.gcount[g]>0) c++; return c; }
+
+  // ---------------- counterfactual knock-out ----------------
+  function clone(S){
+    var T = {P:Object.assign({}, S.P), seed:S.seed, tick:S.tick, n:S.n};
+    T.rng = new RNG(1); T.rng.a = S.rng.a;
+    ['f','tmp','kx','ky','pmask','ax','ay','E','mass','st','gen','lk','slot','gcount','slotOf','slotGen',
+     'rel','U','F','I','RT','SP','PP','EN','banned','light'].forEach(function(k){ T[k] = S[k].slice(); });
+    T.free = S.free.slice(); T.particles = S.particles.slice();
+    return T;
+  }
+  function knockOut(S, genotypes){
+    genotypes.forEach(function(g){ S.banned[g] = 1; });
+    for (var i=S.n-1;i>=0;i--) if (S.banned[S.gen[i]]) removeAgent(S, i);
+  }
+  // Plan the tests for one recipient genotype: control, remove-each-supplier, keep-only-one,
+  // remove-all. ALL realised suppliers (share >= THETA) are tested; nothing is capped. Genotypes
+  // below that share, and all other genotypes, stay present in every arm (the "background").
+  function koPlan(A, recipientG){
+    var nd = null; A.nodes.forEach(function(x){ if (x.g===recipientG) nd = x; });
+    if (!nd) return null;
+    var ri = A.nodes.indexOf(nd), sup = {};
+    A.used.forEach(function(e){ if (e.to===ri && !e.opp) sup[A.nodes[e.from].g] = 1; });
+    var sups = Object.keys(sup).map(Number);
+    var tests = [{name:'control', remove:[]}];
+    sups.forEach(function(g){ tests.push({name:'remove', target:g, remove:[g]}); });
+    if (sups.length >= 3) sups.forEach(function(g){ tests.push({name:'only', target:g, remove:sups.filter(function(h){ return h!==g; })}); });
+    if (sups.length >= 2) tests.push({name:'none', remove:sups.slice()});
+    return {recipient:recipientG, suppliers:sups, tests:tests};
+  }
+  // Interpretation. What these arms can establish (relative to the tested set, with the untested
+  // background present) is a LOWER bound on how many tested suppliers are needed, assuming
+  // monotone rescue (adding a supplier never hurts). Exact counts would need subset tests.
+  // status: inconclusive | none-tested | not-needed | one-suffices | at-least | ambiguous
+  function koInterpret(plan, results, minControl){
+    minControl = minControl == null ? 1 : minControl;
+    var k = plan.suppliers.length, ctl = results[0];
+    var out = {control:ctl, rows:[], usedN:k, tested:plan.suppliers.slice(), required:[], soloOK:[], dLower:null};
+    if (!(ctl >= minControl)){ out.status = 'inconclusive';
+      out.label = 'Inconclusive: the recipient is (nearly) extinct in the control arm, so no removal can be scored.'; return out; }
+    var ok = function(v){ return v >= 0.3*ctl; }, arm = {};
+    plan.tests.forEach(function(t,i){
+      if (i===0) return;
+      var v = results[i], surv = ok(v);
+      out.rows.push({name:t.name, target:t.target, value:v, ratio: v/ctl, survives:surv});
+      if (t.name==='remove' && !surv) out.required.push(t.target);
+      if (t.name==='only' && surv) out.soloOK.push(t.target);
+      arm[t.name+':'+(t.target==null?'':t.target)] = surv;
+    });
+    // With k = 1 the 'none' arm is the single removal; with k = 2 'only X' is 'remove Y'.
+    if (k === 2) plan.suppliers.forEach(function(g, j){ if (arm['remove:'+plan.suppliers[1-j]]) out.soloOK.push(g); });
+    var noneSurv = k === 0 ? true : (k === 1 ? arm['remove:'+plan.suppliers[0]] : arm['none:']);
+    if (k === 1 && !noneSurv) out.soloOK.push(plan.suppliers[0]);
+    var inconsistent = out.soloOK.some(function(g){ return out.required.some(function(h){ return h!==g; }); });
+    if (k === 0){ out.status = 'none-tested'; out.label = 'No realised supplier above the 15% share: nothing to knock out.'; }
+    else if (noneSurv && out.required.length){ out.status = 'ambiguous';
+      out.label = 'Ambiguous: removing one supplier hurts but removing all tested suppliers does not (indirect effects such as competition release).'; }
+    else if (noneSurv){ out.status = 'not-needed'; out.dLower = 0;
+      out.label = 'Removing all '+k+' tested supplier(s) together is harmless: none of them is needed while the untested background remains.'; }
+    else if (inconsistent){ out.status = 'ambiguous';
+      out.label = 'Ambiguous: one supplier suffices alone, yet removing a different one is fatal (noise or non-monotone effects).'; }
+    else if (out.soloOK.length){ out.status = 'one-suffices'; out.dLower = 1;
+      out.label = 'At least one tested supplier is needed, and one alone suffices (with the background): not plexitrophic among the tested suppliers.'; }
+    else { out.status = 'at-least'; out.dLower = Math.max(2, out.required.length);
+      out.label = 'No tested supplier suffices alone and removing all is fatal: at least '+out.dLower+' of the '+k+' tested suppliers are needed (lower bound under monotone rescue; exact count not established).'; }
+    out.plexiLowerBound = out.dLower != null && out.dLower >= 2;
+    return out;
+  }
+
+  // ---------------- sampling and the observer ----------------
+  function sample(S, cx, cy, rad, eventId){
+    var counts = {}, r2 = rad*rad, tot = 0;
+    for (var i=0;i<S.n;i++){ var dx=S.ax[i]-cx, dy=S.ay[i]-cy; if (dx*dx+dy*dy<=r2){ counts[S.gen[i]]=(counts[S.gen[i]]||0)+1; tot++; } }
+    var onPart = S.pmask[((cy|0)*W+(cx|0))] ? 1 : 0;
+    return {event:eventId, tick:S.tick, x:cx, y:cy, r:rad, counts:counts, total:tot, particle:onPart};
+  }
+  // Synthetic genome assembly. The INTACT genome is laid out first: blank-KO CDSs (housekeeping,
+  // unannotated) with every pathway gene flanked by >= 2 blank CDSs. It is then cut at simulated
+  // breakpoints into contigs, and whole contigs are lost with probability (1 - compl). Only
+  // surviving contigs are exported, in coordinate order, with consecutive per-contig CDS indices
+  // (protein_id = <contig_id>_<n>), so contig-end uncertainty is real, not added afterwards.
+  // Deterministic in (g, compl, salt): one assembly per genotype, as one MAG per genome.
+  var CDS_BP = 1000;
+  function synthGenome(g, compl, salt){
+    var cds = [], k, j, h = function(a,b){ return hash32(g, a*131 + b, salt); };
+    var genes = []; for (k=0;k<NG;k++) if ((g>>k)&1) genes.push(k);
+    genes.sort(function(a,b){ return h(1,a) - h(1,b); });          // gene order along the chromosome
+    for (j=0;j<2+((h(2,0)*3)|0);j++) cds.push(-1);
+    genes.forEach(function(k2, n){ cds.push(k2); var nb = 2 + ((h(3,n)*4)|0); for (j=0;j<nb;j++) cds.push(-1); });
+    // breakpoints between CDS i-1 and i
+    var contigs = [], start = 0;
+    for (var i=1;i<=cds.length;i++){
+      if (i === cds.length || h(4,i) < 0.14){
+        contigs.push({start:start, end:i}); start = i; }
+    }
+    var mag = 'MAG_'+g, out = [], observed = 0, cn = 0, keptCds = 0;
+    contigs.forEach(function(c, ci){
+      var lost = h(5,ci) >= compl;
+      c.lost = lost; if (lost) return;
+      cn++; var cid = mag+'_c'+cn, n = c.end - c.start;
+      c.id = cid; c.length = n*CDS_BP + 150 + ((h(6,ci)*300)|0); keptCds += n;
+      c.cds = [];
+      for (var q=0;q<n;q++){
+        var gk = cds[c.start+q];
+        if (gk >= 0) observed |= 1<<gk;
+        c.cds.push({protein_id:cid+'_'+(q+1), index:q+1, gene: gk>=0 ? GENES[gk] : '', ko: gk>=0 ? KO[gk] : '',
+                    boundary: (q===0 || q===n-1) ? 'end' : 'internal', intact_pos:c.start+q});
+      }
+      out.push(c);
+    });
+    return {mag:mag, domain:(g & B_EUK) ? 'Eukaryota' : 'Bacteria', contigs:out, nContigsIntact:contigs.length,
+            observed: observed | (g & B_EUK), cdsIntact:cds.length, cdsKept:keptCds,
+            completeness: cds.length ? keptCds/cds.length : 1};
+  }
+  function obsGenome(g, compl, salt){ return synthGenome(g, compl, salt).observed; }
+  // Tab-separated synthetic observation export (abundance, samples, per-MAG CDS records, contigs,
+  // completeness, and the simulated boundary truth for scoring P2-style edge calls).
+  function exportTSV(samples, compl, salt){
+    var gs = {}; samples.forEach(function(s){ Object.keys(s.counts).forEach(function(g){ if (s.counts[g]>=2) gs[g]=1; }); });
+    var glist = Object.keys(gs).map(Number).sort(function(a,b){ return a-b; });
+    var o = '## abundance (genomes x samples; cell counts, detection >= 2 cells; columns are shared event IDs)\nmag_id\t'+samples.map(function(s){return s.event;}).join('\t')+'\n';
+    glist.forEach(function(g){ o += 'MAG_'+g+'\t'+samples.map(function(s){ var c=s.counts[g]||0; return c>=2?c:0; }).join('\t')+'\n'; });
+    o += '\n## samples\nevent_id\ttick\tx\ty\tradius\tparticle\ttotal_cells\n';
+    samples.forEach(function(s){ o += [s.event,s.tick,s.x.toFixed(1),s.y.toFixed(1),s.r,s.particle,s.total].join('\t')+'\n'; });
+    var per = '\n## per_mag CDS records (surviving contigs only, coordinate order; blank KO = unannotated CDS)\n'
+      + '## KO ids are illustrative representatives: K00768 = cobT (DMB phosphoribosyltransferase, cobamide salvage/lower-ligand step, NOT de novo corrin-ring synthesis); K00549 = metE; check all before real use\n'
+      + 'mag_id\tdomain\tcontig_id\tprotein_id\tfeature_order\tKO\tEC\tgene\n';
+    var ctg = '\n## contigs\nmag_id\tcontig_id\tcontig_length\tn_cds\n';
+    var cm = '\n## completeness\nmag_id\tdomain\tcompleteness_cds\tcontigs_kept\tcontigs_intact\tgenes_observed\tgenes_true\n';
+    var bt = '\n## boundary truth (simulated breakpoints; for scoring edge status)\nmag_id\tprotein_id\tgene\tboundary_true\tintact_cds_position\n';
+    glist.forEach(function(g){
+      var sg = synthGenome(g, compl, salt), no = 0, nt = 0;
+      for (var k=0;k<NG;k++) if ((g>>k)&1){ nt++; if ((sg.observed>>k)&1) no++; }
+      sg.contigs.forEach(function(c){
+        ctg += [sg.mag, c.id, c.length, c.cds.length].join('\t')+'\n';
+        c.cds.forEach(function(x){
+          per += [sg.mag, sg.domain, c.id, x.protein_id, x.index, x.ko, '', x.gene].join('\t')+'\n';
+          if (x.gene) bt += [sg.mag, x.protein_id, x.gene, x.boundary, x.intact_pos].join('\t')+'\n';
+        });
+      });
+      cm += [sg.mag, sg.domain, sg.completeness.toFixed(3), sg.contigs.length, sg.nContigsIntact, no, nt].join('\t')+'\n';
+    });
+    return o + per + ctg + cm + bt;
+  }
+  function pinv(A, n, ridge){
+    var M = [], i, j, k;
+    for (i=0;i<n;i++){ M.push([]); for (j=0;j<2*n;j++) M[i].push(j<n ? A[i][j] + (i===j?ridge:0) : (j-n===i?1:0)); }
+    for (i=0;i<n;i++){
+      var piv=i; for (k=i+1;k<n;k++) if (Math.abs(M[k][i])>Math.abs(M[piv][i])) piv=k;
+      var t=M[i]; M[i]=M[piv]; M[piv]=t;
+      var d = M[i][i] || 1e-12;
+      for (j=0;j<2*n;j++) M[i][j]/=d;
+      for (k=0;k<n;k++) if (k!==i){ var fct=M[k][i]; if (fct) for (j=0;j<2*n;j++) M[k][j]-=fct*M[i][j]; }
+    }
+    return M.map(function(row){ return row.slice(n); });
+  }
+  function observe(samples, opt){
+    opt = opt || {};
+    var compl = opt.compl == null ? 0.85 : opt.compl, mode = opt.mode || 'corr', salt = opt.salt || 17;
+    var minDet = 2, maxNodes = opt.maxNodes || 12;
+    var tot = {}, presentIn = {};
+    samples.forEach(function(sm){ Object.keys(sm.counts).forEach(function(k){ var c = sm.counts[k];
+      if (c >= minDet){ tot[k] = (tot[k]||0) + c/Math.max(1,sm.total); presentIn[k]=(presentIn[k]||0)+1; } }); });
+    var gs = Object.keys(tot).map(Number).sort(function(a,b){ return tot[b]-tot[a]; }).slice(0, maxNodes);
+    var n = gs.length, ns = samples.length;
+    var X = gs.map(function(g){ return samples.map(function(sm){ var c = sm.counts[g]||0; return c>=minDet ? Math.log1p(1000*c/Math.max(1,sm.total)) : 0; }); });
+    var assoc = [];
+    for (var i=0;i<n;i++){ assoc.push(new Array(n).fill(0)); }
+    if (ns >= 4){
+      var mu = X.map(function(r){ return r.reduce(function(a,b){return a+b;},0)/ns; });
+      var C = [];
+      for (var a=0;a<n;a++){ C.push([]); for (var b=0;b<n;b++){ var s=0; for (var q=0;q<ns;q++) s += (X[a][q]-mu[a])*(X[b][q]-mu[b]); C[a].push(s/(ns-1)); } }
+      if (mode === 'pcor' && n>1){
+        var tr = 0; for (var d=0; d<n; d++) tr += C[d][d];
+        var Pm = pinv(C, n, 0.1*tr/n + 1e-9);
+        for (var a2=0;a2<n;a2++) for (var b2=0;b2<n;b2++) assoc[a2][b2] = a2===b2 ? 1 : -Pm[a2][b2]/Math.sqrt(Math.abs(Pm[a2][a2]*Pm[b2][b2]) || 1e-12);
+      } else {
+        for (var a3=0;a3<n;a3++) for (var b3=0;b3<n;b3++) assoc[a3][b3] = C[a3][b3]/Math.sqrt((C[a3][a3]*C[b3][b3]) || 1e-12);
+      }
+    } else {
+      for (var a4=0;a4<n;a4++) for (var b4=0;b4<n;b4++){ var both=0, any=0;
+        samples.forEach(function(sm){ var A1=(sm.counts[gs[a4]]||0)>=minDet, B1=(sm.counts[gs[b4]]||0)>=minDet; if (A1&&B1) both++; if (A1||B1) any++; });
+        assoc[a4][b4] = any ? both/any - 0.3 : 0; }
+    }
+    var obsG = gs.map(function(g){ return obsGenome(g, compl, salt); });
+    var edges = [], AT = opt.assocMin == null ? 0.2 : opt.assocMin;
+    var nodes = gs.map(function(g,i){ return {g:g, obs:obsG[i], abund:tot[g], prev:presentIn[g]/Math.max(1,ns)}; });
+    nodes.forEach(function(nd, ri){
+      var og = nd.obs, reqs = [];
+      function cand(ch, kind, hasFn){
+        var ds = [];
+        for (var q=0;q<n;q++){ if (q===ri) continue; if (hasFn(obsG[q]) && assoc[ri][q] > AT){ ds.push(q); edges.push({from:q, to:ri, ch:ch, kind:kind, assoc:assoc[ri][q]}); } }
+        if (ds.length) reqs.push(ds);
+      }
+      for (var ch=0; ch<ESS; ch++) if (!(og & (1<<ch))) cand(ch, 'anab', function(o){ return o & (1<<ch); });
+      var en = og & ENERGY;
+      if (!(og & B_PHOTO) && (og & (B_RESP|B_FERM))) cand(C_C, 'catab', function(o){ return o & B_PHOTO; });
+      if (en === B_RESP) cand(C_O2, 'catab', function(o){ return o & B_PHOTO; });
+      if (en === B_FERM) cand(C_H2, 'catab', function(o){ return o & B_HYD; });
+      var mc = minCover(reqs); nd.d = mc.d; nd.dUsed = 0;
+      var dset = {}; edges.forEach(function(e){ if (e.to===ri) dset[e.from]=1; }); nd.dUsed = Object.keys(dset).length;
+    });
+    var seen = {}, pairs = [];
+    edges.forEach(function(e){ var k=e.from+'>'+e.to; if (!seen[k]){ seen[k]=1; pairs.push([e.from,e.to]); } });
+    var adj = nodes.map(function(){ return []; }); pairs.forEach(function(p){ adj[p[0]].push(p[1]); });
+    var cycles = findCycles(n, adj, 8);
+    return {nodes:nodes, edges:edges, assoc:assoc, cycles:cycles, topo:classify(n, pairs), nSamples:ns, mode:mode};
+  }
+  // Compare observer edges (genotype pairs) with realised truth edges on required channels.
+  // Eligible ordered pairs = both genotypes observed by the observer AND in the analysed truth node
+  // set. Conditional precision and recall use the same eligible set; coverage and end-to-end recall
+  // report how much of the truth the samples could reach at all.
+  function compare(A, O){
+    var truth = {}, inTruth = {}, inObs = {};
+    A.nodes.forEach(function(nd){ inTruth[nd.g] = nd; });
+    O.nodes.forEach(function(nd){ inObs[nd.g] = 1; });
+    A.used.forEach(function(e){ if (!e.opp) truth[A.nodes[e.from].g+'>'+A.nodes[e.to].g] = 1; });
+    var pred = {}; O.edges.forEach(function(e){ pred[O.nodes[e.from].g+'>'+O.nodes[e.to].g] = 1; });
+    var elig = function(k){ var ab = k.split('>'); return inObs[ab[0]] && inObs[ab[1]] && inTruth[ab[0]] && inTruth[ab[1]]; };
+    var tp=0, fp=0, unscorable=0, truthAll=0, truthElig=0;
+    Object.keys(pred).forEach(function(k){ if (!elig(k)){ unscorable++; return; } if (truth[k]) tp++; else fp++; });
+    Object.keys(truth).forEach(function(k){ truthAll++; if (elig(k)) truthElig++; });
+    var fn = truthElig - tp;
+    var dAgree = 0, dN = 0, plexiMiss = 0, plexiFalse = 0, unresolved = 0;
+    O.nodes.forEach(function(on){ var tn = inTruth[on.g]; if (!tn) return;
+      if (!tn.resolved){ unresolved++; return; }
+      dN++; var t2 = tn.plexi, o2 = on.d>=2;
+      if (t2===o2) dAgree++; else if (t2) plexiMiss++; else plexiFalse++; });
+    return {precision: tp+fp ? tp/(tp+fp) : NaN, recall: truthElig ? tp/truthElig : NaN,
+            coverage: truthAll ? truthElig/truthAll : NaN, recallE2E: truthAll ? tp/truthAll : NaN,
+            tp:tp, fp:fp, fn:fn, unscorable:unscorable, truthAll:truthAll, truthElig:truthElig,
+            dAgree: dN ? dAgree/dN : NaN, dN:dN, plexiMiss:plexiMiss, plexiFalse:plexiFalse, unresolvedMatched:unresolved};
+  }
+
+  // ---------------- challenges (pure scoring) ----------------
+  var CHALLENGES = [
+    {id:'fanin', name:'Fan-in: most auxotrophs need two donors',
+     desc:'Evolve a world where at least half of the auxotrophic cells have required anabolic d ≥ 2 (two different suppliers each needed, not just used). Hold it for 400 ticks.',
+     hold:400, check:function(A){ return {met: A.auxCells>=100 && A.fanInFrac>=0.5, value:A.fanInFrac, label:'auxotroph cells with required d_anab ≥ 2: '+pct(A.fanInFrac)+' of '+A.auxCells}; }},
+    {id:'ring', name:'Ring of three',
+     desc:'Get an irreducible exchange cycle of three or more genotypes in which each link is the sole supplier of something (heuristic detector: sole-supplier edges only). Hold it for 400 ticks. Hard: all biosynthesis genes are parallel, input-free reactions, so there is no precursor cascade to force a ring; in our test sweeps this never happened, so it may be unreachable under these rules (that would itself be a result).',
+     hold:400, check:function(A){ return {met: A.reqCycles.length>0, value:A.reqCycles.length?1:0, label:'required cycles ≥ 3: '+A.reqCycles.length}; }},
+    {id:'redund', name:'Busy but not plexitrophic',
+     desc:'Make at least 40% of cells use two or more suppliers while fewer than 10% are plexitrophic. Realised transfers are not required partners.',
+     hold:300, check:function(A){ return {met: A.multiUseFrac>=0.4 && A.plexiFrac<0.1, value:A.multiUseFrac, label:'using ≥ 2 suppliers '+pct(A.multiUseFrac)+', plexitrophic '+pct(A.plexiFrac)}; }},
+    {id:'fool', name:'Fool the observer',
+     desc:'Take at least 6 samples (all within the last 300 ticks) so that the observer calls a mesh while the true required-partner graph is acyclic (chain, fan-in, hub or tree).',
+     hold:1, check:function(A, O, samples){
+       var fresh = samples.length>=6 && samples.every(function(s){ return A.tick - s.tick <= 300; });
+       var met = !!(O && fresh && O.topo==='mesh' && A.topoReq!=='mesh' && A.topoReq!=='none');
+       return {met:met, value:met?1:0, label:'truth: '+A.topoReq+' / observer: '+(O?O.topo:'(no samples)')+(fresh?'':' (need ≥ 6 fresh samples)')}; }},
+    {id:'bq', name:'Black Queen market',
+     desc:'Reach ≥ 600 cells with no prototroph left among the common genotypes: every common genotype has lost at least one essential gene. Hold for 400 ticks.',
+     hold:400, check:function(A){ var proto = A.nodes.filter(function(nd){ return (nd.g & 63) === 63; }).length;
+       return {met: A.n>=600 && proto===0 && A.nodes.length>0, value: A.nodes.length? 1-proto/A.nodes.length : 0, label:'cells '+A.n+', prototroph genotypes among common: '+proto}; }},
+    {id:'predict', name:'Predict, then synthesise',
+     desc:'Set the world, then predict the % of cells that will be plexitrophic at tick 4000 and the architecture of the required-partner graph. Three fresh seeds are run with your settings and scored against your prediction.',
+     hold:0, check:null}
+  ];
+  function pct(x){ return (100*x).toFixed(0)+'%'; }
+  function predictScore(predPct, predTopo, results){
+    var mean = results.reduce(function(a,r){ return a+r.plexiFrac; },0)/results.length*100;
+    var topoHits = results.filter(function(r){ return r.topo===predTopo; }).length;
+    var s = Math.max(0, 100 - 2*Math.abs(predPct-mean)) + 15*topoHits;
+    return {score:Math.round(s), mean:mean, topoHits:topoHits};
+  }
+
+  return {B_EUK:B_EUK, NGT:NGT, GENES:GENES, CH:CH, NCH:NCH, NG:NG, ESS:ESS, W:W, H:H, N:N, K:K, KO:KO, CAP:CAP,
+          ENERGY:ENERGY, defaults:defaults, create:create, step:step, buildParticles:buildParticles,
+          analyze:analyze, clone:clone, knockOut:knockOut, koPlan:koPlan, koInterpret:koInterpret,
+          sample:sample, observe:observe, synthGenome:synthGenome, exportTSV:exportTSV, compare:compare, obsGenome:obsGenome, classify:classify,
+          minCover:minCover, findCycles:findCycles, CHALLENGES:CHALLENGES, predictScore:predictScore, RNG:RNG};
+})();
+if (typeof module !== 'undefined') module.exports = PlexiCore;
+</script>
+
+<!-- ======================= UI ======================= -->
+<script>
+"use strict";
+(function(){
+  var C = PlexiCore, $ = function(id){ return document.getElementById(id); };
+  var params = C.defaults(), sim = null, running = true, A = null, O = null, samples = [], eventN = 0;
+  var hist = [], chState = {idx:0, streak:0, done:false, best:0}, koJob = null, predJob = null;
+  var SL = [
+    ['leak','leakiness',0,1,0.01,'fraction of a leaky gene\'s product released to the water'],
+    ['geneCost','gene cost',0,1,0.01,'energy cost of carrying each gene (Black Queen pressure)'],
+    ['diffusion','diffusion',0,1,0.01,'how fast metabolites spread'],
+    ['incompat','incompatibility',0,1,0.01,'how badly an oxygenic genome poisons its own O2-sensitive enzymes'],
+    ['mixing','mixing',0,1,0.01,'stirring of cells and water'],
+    ['supply','organic C supply',0,1,0.01,'abiotic organic carbon input'],
+    ['nSupply','fixed-N supply',0,1,0.01,'abiotic fixed nitrogen input'],
+    ['light','light',0,1,0.01,'surface light (decays with depth)'],
+    ['aeration','aeration',0,1,0.01,'O2 exchange at the surface'],
+    ['particles','particles (on reset)',0,10,1,'diffusion-limited particles that release organic C'],
+    ['mutation','gene-loss rate',0,1,0.01,'mutation rate: loss, rare regain, leaky/private switch'],
+    ['cap','max cells',300,2000,50,'performance cap on population']
+  ];
+  var sl = $('sliders');
+  SL.forEach(function(d){
+    var lab = document.createElement('label'); lab.title = d[5];
+    lab.innerHTML = '<span>'+d[1]+' <b id="v_'+d[0]+'"></b></span><input type="range" id="s_'+d[0]+'" min="'+d[2]+'" max="'+d[3]+'" step="'+d[4]+'">';
+    sl.appendChild(lab);
+    var inp = lab.querySelector('input'); inp.value = params[d[0]];
+    var show = function(){ $('v_'+d[0]).textContent = d[4]>=1 ? (+inp.value).toFixed(0) : (+inp.value).toFixed(2); };
+    show();
+    inp.addEventListener('input', function(){ params[d[0]] = +inp.value; if (sim && d[0]!=='particles') sim.P[d[0]] = +inp.value; show(); });
+  });
+
+  // theme
+  var themeBtn = $('themeBtn');
+  themeBtn.onclick = function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var dark = cur ? cur==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark'); readColors();
+  };
+  var col = {};
+  function readColors(){ var cs = getComputedStyle(document.documentElement);
+    ['bg','panel','ink','muted','line','accent','anab','catab','cyc','ok','warn','redund','sample','field-lo'].forEach(function(k){ col[k] = cs.getPropertyValue('--'+k).trim(); });
+    col.dark = luminance(col.bg) < 0.4; }
+  function luminance(hex){ var h = hex.replace('#',''); if (h.length===3) h=h.split('').map(function(c){return c+c;}).join('');
+    var n = parseInt(h,16); return (((n>>16)&255)*0.299 + ((n>>8)&255)*0.587 + (n&255)*0.114)/255; }
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
+  readColors();
+
+  function genoHue(g){ return (Math.imul(g+1, 2654435761)>>>0) % 360; }
+  function genoColor(g, a){ return 'hsla('+genoHue(g)+','+(col.dark?'70%':'62%')+','+(col.dark?'62%':'45%')+','+(a==null?1:a)+')'; }
+  function genoLabel(g){
+    var miss = []; for (var k=0;k<6;k++) if (!(g & (1<<k))) miss.push(C.GENES[k]);
+    var en = ''; if (g & 64) en+='P'; if (g & 128) en+='R'; if (g & 256) en+='F'; if (g & 512) en+='H';
+    return ((g & C.B_EUK) ? 'Alga ' : '') + (en||'-') + (miss.length ? ' Δ'+miss.join(',') : ' proto');
+  }
+
+  function reset(){
+    sim = C.create(params, +$('seed').value || 1);
+    A = null; O = null; samples = []; hist = []; chState.streak = 0; chState.done = false;
+    $('obsSummary').textContent = 'Take some samples (tap the field) to build the observer\'s network.';
+    analyzeNow();
+  }
+
+  // ---------- field rendering ----------
+  var fc = $('field'), fctx = fc.getContext('2d');
+  var off = document.createElement('canvas'); off.width = C.W; off.height = C.H;
+  var octx = off.getContext('2d'), img = octx.createImageData(C.W, C.H);
+  var bgMax = new Float32Array(9).fill(0.05);
+  function hexRGB(h){ h=h.replace('#',''); if (h.length===3) h=h.split('').map(function(c){return c+c;}).join(''); var n=parseInt(h,16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+  var CHCOL = [[180,60,200],[60,160,90],[200,140,40],[40,140,200],[200,70,70],[60,110,220],[150,110,40],[30,170,200],[220,120,30]];
+  function drawField(){
+    var ch = +$('bgSel').value, lo = hexRGB(col['field-lo']), d = img.data, N = C.N;
+    if (ch >= 0){
+      var mx = 1e-6; for (var i=0;i<N;i++){ var v = sim.f[ch*N+i]; if (v>mx) mx=v; }
+      bgMax[ch] = Math.max(mx, bgMax[ch]*0.98); var inv = 1/bgMax[ch], cc = CHCOL[ch];
+      for (var j=0;j<N;j++){ var t = Math.min(1, Math.sqrt(sim.f[ch*N+j]*inv))*0.75;
+        d[j*4]=lo[0]+(cc[0]-lo[0])*t; d[j*4+1]=lo[1]+(cc[1]-lo[1])*t; d[j*4+2]=lo[2]+(cc[2]-lo[2])*t; d[j*4+3]=255; }
+    } else for (var q=0;q<N;q++){ d[q*4]=lo[0]; d[q*4+1]=lo[1]; d[q*4+2]=lo[2]; d[q*4+3]=255; }
+    octx.putImageData(img,0,0);
+    fctx.imageSmoothingEnabled = false;
+    fctx.drawImage(off, 0, 0, fc.width, fc.height);
+    var sc = fc.width / C.W;
+    fctx.strokeStyle = col.muted; fctx.lineWidth = 1.5; fctx.setLineDash([4,3]);
+    sim.particles.forEach(function(p){ fctx.beginPath(); fctx.arc(p[0]*sc, p[1]*sc, p[2]*sc, 0, 6.2832); fctx.stroke(); });
+    fctx.setLineDash([]);
+    var mode = $('colSel').value, dMap = {};
+    if (mode==='d' && A) A.nodes.forEach(function(nd){ dMap[nd.g] = nd.plexi ? 2 : (nd.dT>=1 ? 1 : 0); });
+    var dCols = [col.muted, col.anab, col.cyc];
+    var cache = {};
+    for (var a=0;a<sim.n;a++){
+      var g = sim.gen[a], cstr;
+      if (mode==='geno'){ cstr = cache[g] || (cache[g] = genoColor(g)); }
+      else if (mode==='d'){ var dv = dMap[g]; cstr = dv==null ? col.line : dCols[dv]; }
+      else { var priv = (~sim.lk[a]) & g & 1023, np = 0; while (priv){ priv&=priv-1; np++; } cstr = np ? col.cyc : col.muted; }
+      fctx.fillStyle = cstr;
+      if (g & C.B_EUK){ fctx.fillRect(sim.ax[a]*sc-4, sim.ay[a]*sc-4, 8, 8); fctx.strokeStyle = col.ink; fctx.lineWidth = 1; fctx.strokeRect(sim.ax[a]*sc-4, sim.ay[a]*sc-4, 8, 8); }
+      else fctx.fillRect(sim.ax[a]*sc-2, sim.ay[a]*sc-2, 4, 4);
+    }
+    fctx.strokeStyle = col.sample; fctx.lineWidth = 1;
+    samples.forEach(function(s){ fctx.globalAlpha = Math.max(0.25, 1 - (sim.tick - s.tick)/1500);
+      fctx.beginPath(); fctx.arc(s.x*sc, s.y*sc, s.r*sc, 0, 6.2832); fctx.stroke(); });
+    fctx.globalAlpha = 1;
+  }
+  fc.addEventListener('pointerdown', function(ev){
+    var r = fc.getBoundingClientRect();
+    var x = (ev.clientX - r.left)/r.width*C.W, y = (ev.clientY - r.top)/r.height*C.H;
+    takeSample(x, y);
+  });
+  function takeSample(x, y){
+    samples.push(C.sample(sim, x, y, +$('srad').value, 'EV'+String(++eventN).padStart(4,'0')));
+    if (samples.length > 40) samples.shift();
+    observeNow();
+  }
+  $('auto8').onclick = function(){ for (var i=0;i<8;i++) takeSample(4+sim.rng.next()*(C.W-8), 4+sim.rng.next()*(C.H-8)); };
+  $('transect').onclick = function(){ for (var i=0;i<8;i++) takeSample(C.W*0.5, 4 + i*(C.H-8)/7); };
+  $('clearS').onclick = function(){ samples = []; O = null; drawObs(); $('obsSummary').textContent = 'Samples cleared.'; };
+  $('compl').oninput = function(){ $('complV').textContent = $('compl').value+'%'; observeNow(); };
+  $('obsMode').onchange = observeNow;
+
+  // ---------- synthetic observation export ----------
+  $('exportS').onclick = function(){
+    if (!samples.length){ alert('Take some samples first.'); return; }
+    var out = C.exportTSV(samples, +$('compl').value/100, 17);
+    var blob = new Blob([out], {type:'text/tab-separated-values'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'plexi_samples_tick'+sim.tick+'.tsv'; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  };
+
+  // ---------- analysis ----------
+  function analyzeNow(){
+    A = C.analyze(sim);
+    hist.push([sim.n, A.plexiFrac, A.multiUseFrac]); if (hist.length > 300) hist.shift();
+    drawStats(); drawTruth(); drawHist(); refreshKoSel(); checkChallenge();
+    if (samples.length) observeNow(true);
+  }
+  function observeNow(quiet){
+    if (!samples.length){ O = null; drawObs(); return; }
+    O = C.observe(samples, {compl:+$('compl').value/100, mode:$('obsMode').value});
+    drawObs();
+  }
+  function stat(k, v){ return '<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>'; }
+  function pct(x){ return isNaN(x) ? 'n/a' : (100*x).toFixed(0)+'%'; }
+  function drawStats(){
+    var aux = 0, priv = 0, genes = 0;
+    for (var i=0;i<sim.n;i++){ var g = sim.gen[i]; if ((g & 63) !== 63) aux++; genes += popc(g & 63); if ((~sim.lk[i]) & g & 1023) priv++; }
+    $('stats').innerHTML = stat('cells', sim.n) + stat('genotypes', A.nGenotypes) + stat('auxotroph cells', pct(aux/Math.max(1,sim.n)))
+      + stat('mean biosynth. genes', (genes/Math.max(1,sim.n)).toFixed(2)+' / 6') + stat('cells w/ private genes', pct(priv/Math.max(1,sim.n)))
+      + stat('plexitrophic (resolved)', pct(A.plexiFrac)) + stat('use ≥ 2 suppliers', pct(A.multiUseFrac)) + stat('fan-in (aux.)', pct(A.fanInFrac));
+    $('tickLbl').textContent = 'tick '+sim.tick;
+  }
+  function popc(x){ var c=0; while(x){ x&=x-1; c++; } return c; }
+  var hc = $('hist'), hctx = hc.getContext('2d');
+  function drawHist(){
+    var w = hc.width, h = hc.height; hctx.clearRect(0,0,w,h);
+    hctx.strokeStyle = col.line; hctx.strokeRect(0.5,0.5,w-1,h-1);
+    if (hist.length < 2) return;
+    var mx = 1; hist.forEach(function(r){ mx = Math.max(mx, r[0]); });
+    [[0, col.accent, mx],[1, col.cyc, 1],[2, col.redund, 1]].forEach(function(s){
+      hctx.strokeStyle = s[1]; hctx.lineWidth = 2; hctx.beginPath();
+      hist.forEach(function(r, i){ var x = i/(hist.length-1)*(w-4)+2, y = h-4-(r[s[0]]/s[2])*(h-8); if (i) hctx.lineTo(x,y); else hctx.moveTo(x,y); });
+      hctx.stroke(); });
+  }
+
+  // ---------- graph drawing ----------
+  function layout(n, w, h){ var pts = [], cx=w/2, cy=h/2, R = Math.min(w,h)*0.38;
+    for (var i=0;i<n;i++){ var a = -Math.PI/2 + i/n*2*Math.PI; pts.push([cx+R*Math.cos(a)*1.25, cy+R*Math.sin(a)]); } return pts; }
+  function arrow(ctx, p, q, color, width, bend, dash){
+    var mx=(p[0]+q[0])/2, my=(p[1]+q[1])/2, dx=q[0]-p[0], dy=q[1]-p[1], L=Math.hypot(dx,dy)||1;
+    var cx = mx - dy/L*bend, cy = my + dx/L*bend;
+    var r = 15, tx = q[0]-cx, ty = q[1]-cy, tl = Math.hypot(tx,ty)||1, ex = q[0]-tx/tl*r, ey = q[1]-ty/tl*r;
+    var sx0 = p[0]+(cx-p[0])/(Math.hypot(cx-p[0],cy-p[1])||1)*r, sy0 = p[1]+(cy-p[1])/(Math.hypot(cx-p[0],cy-p[1])||1)*r;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash||[]);
+    ctx.beginPath(); ctx.moveTo(sx0, sy0); ctx.quadraticCurveTo(cx, cy, ex, ey); ctx.stroke(); ctx.setLineDash([]);
+    var ang = Math.atan2(ey-cy, ex-cx), ah = 6+width;
+    ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-ah*Math.cos(ang-0.4), ey-ah*Math.sin(ang-0.4)); ctx.lineTo(ex-ah*Math.cos(ang+0.4), ey-ah*Math.sin(ang+0.4)); ctx.closePath(); ctx.fill();
+  }
+  function drawNodes(ctx, pts, nodes, sub){
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    nodes.forEach(function(nd, i){ var p = pts[i];
+      ctx.fillStyle = genoColor(nd.g); ctx.beginPath();
+      if (nd.g & C.B_EUK) ctx.rect(p[0]-14, p[1]-14, 28, 28); else ctx.arc(p[0], p[1], 13, 0, 6.2832);
+      ctx.fill();
+      if (nd.ring){ ctx.strokeStyle = nd.ring; ctx.lineWidth = 3; ctx.stroke(); }
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 11px system-ui'; ctx.fillText(sub(nd), p[0], p[1]);
+      ctx.fillStyle = col.ink; ctx.font = '10px system-ui';
+      var lab = genoLabel(nd.g); ctx.fillText(lab.length>22 ? lab.slice(0,21)+'…' : lab, p[0], p[1]+22);
+    });
+  }
+  var tg = $('truthG'), tctx = tg.getContext('2d');
+  function drawTruth(){
+    var w = tg.width, h = tg.height; tctx.clearRect(0,0,w,h);
+    if (!A) return;
+    var show = A.nodes.slice(0, 12), pts = layout(show.length, w, h), mode = $('truthMode').value;
+    var edges = mode==='req' ? A.req : A.used, seen = {};
+    edges.forEach(function(e){
+      if (e.from >= show.length || e.to >= show.length) return;
+      var k = e.from+'>'+e.to+'>'+(e.kind); if (seen[k]) return; seen[k]=1;
+      var back = edges.some(function(f){ return f.from===e.to && f.to===e.from; });
+      var inCyc = mode==='req' && e.sole && A.cycEdge[e.from+'>'+e.to];
+      var c = inCyc ? col.cyc : ((mode==='req' && !e.sole) || e.opp ? col.redund : (e.kind==='anab' ? col.anab : col.catab));
+      var wdt = inCyc ? 3.5 : (mode==='used' ? 0.8+3*Math.min(1,e.share) : (e.sole ? 2 : 1.2));
+      if (e.opp) wdt = 0.8;
+      arrow(tctx, pts[e.from], pts[e.to], c, wdt, back ? 14 : (e.kind==='anab'?6:-6), (mode==='req' && !e.sole) ? [4,3] : (e.opp ? [1,3] : null));
+    });
+    show.forEach(function(nd){ nd.ring = nd.plexi ? col.cyc : (nd.redundantOnly ? col.redund : null); });
+    drawNodes(tctx, pts, show, function(nd){ return mode==='req' ? String(nd.dT) : String(nd.dUsed); });
+    tctx.textAlign='left'; tctx.fillStyle = col.muted; tctx.font = '11px system-ui';
+    tctx.fillText(mode==='req' ? 'number in node = required d_total (min. cover, substitutable donors count once)' : 'number = suppliers used on required channels (≥ 15% of total supply); dotted = opportunistic', 6, 12);
+    var t = A.nodes;
+    $('truthSummary').innerHTML = 'Required-partner architecture: <b>'+A.topoReq+'</b>; realised-transfer architecture: <b>'+A.topoUsed+'</b>. '
+      + 'Live, threshold-based estimates: analysed genotypes hold '+pct(A.coverage)+' of cells, and '+pct(A.resolvedFrac)+' of those are resolved (every requirement has a listed supplier). '
+      + 'Plexitrophic: <b>'+pct(A.plexiFrac)+'</b> of resolved cells; redundant use only (one supplier would suffice): <b>'+pct(A.redundantFrac)+'</b> of resolved cells; using ≥ 2 suppliers: <b>'+pct(A.multiUseFrac)+'</b> of analysed cells. '
+      + 'Required cycles ≥ 3 (heuristic: sole-supplier edges only, can miss cycles in alternative supports): <b>'+A.reqCycles.length+'</b> (realised: '+A.usedCycles.length+'). Grey ring = uses several suppliers but is not plexitrophic.';
+    var rows = '<tr><th>genotype</th><th>cells</th><th>used</th><th>d_eff</th><th>req d_anab</th><th>d_catab</th><th>d_total</th><th>cycle</th><th>call</th></tr>';
+    t.slice(0, 12).forEach(function(nd){
+      var call = nd.plexi ? '<span class="bad">plexitrophic</span>' : (nd.redundantOnly ? '<span class="mid">redundant use</span>' : (!nd.resolved ? '<span class="mid">unresolved (d ≥ '+nd.dT+')</span>' : (nd.dT===1 ? 'one partner' : 'independent')));
+      rows += '<tr><td><span style="color:'+genoColor(nd.g)+'">●</span> '+genoLabel(nd.g)+'</td><td>'+nd.count+'</td><td>'+nd.dUsed+'</td><td>'+nd.dEff.toFixed(1)+'</td><td>'+nd.dA+'</td><td>'+nd.dC+'</td><td>'+nd.dT+'</td><td>'+(nd.inCycle?'yes':'')+'</td><td>'+call+'</td></tr>';
+    });
+    $('truthTbl').innerHTML = rows;
+  }
+  $('truthMode').onchange = drawTruth;
+  var og = $('obsG'), octx2 = og.getContext('2d');
+  function drawObs(){
+    var w = og.width, h = og.height; octx2.clearRect(0,0,w,h);
+    if (!O || !O.nodes.length){ return; }
+    var pts = layout(O.nodes.length, w, h), seen = {};
+    var cyc = {}; O.cycles.forEach(function(c){ for (var q=0;q<c.length;q++) cyc[c[q]+'>'+c[(q+1)%c.length]] = 1; });
+    O.edges.forEach(function(e){ var k=e.from+'>'+e.to+'>'+e.kind; if (seen[k]) return; seen[k]=1;
+      var back = O.edges.some(function(f){ return f.from===e.to && f.to===e.from; });
+      arrow(octx2, pts[e.from], pts[e.to], cyc[e.from+'>'+e.to] ? col.cyc : (e.kind==='anab'?col.anab:col.catab), cyc[e.from+'>'+e.to]?3:1.5, back?14:(e.kind==='anab'?6:-6)); });
+    O.nodes.forEach(function(nd){ nd.ring = nd.d>=2 ? col.cyc : null; });
+    drawNodes(octx2, pts, O.nodes, function(nd){ return String(nd.d); });
+    octx2.textAlign='left'; octx2.fillStyle=col.muted; octx2.font='11px system-ui';
+    octx2.fillText('number in node = inferred d (complementarity + association); contig survival '+$('compl').value+'%', 6, 12);
+    var cmp = A ? C.compare(A, O) : null;
+    var age = samples.length ? sim.tick - samples[0].tick : 0;
+    $('obsSummary').innerHTML = O.nSamples+' samples (oldest '+age+' ticks ago), '+O.nodes.length+' genomes detected. Observer calls <b>'+O.topo+'</b>'
+      + (A ? ' vs true required architecture <b>'+A.topoReq+'</b>.' : '.')
+      + (cmp ? ' Against realised transfers, on the '+cmp.truthElig+' true edges whose two genotypes were both observed: precision <b>'+pct(cmp.precision)+'</b>, recall <b>'+pct(cmp.recall)+'</b> ('+cmp.tp+' right, '+cmp.fp+' spurious, '+cmp.fn+' missed; '+cmp.unscorable+' predicted edges involve genotypes outside the truth set and are not scored). '
+        + 'Coverage: '+cmp.truthElig+' of '+cmp.truthAll+' true edges ('+pct(cmp.coverage)+') were observable; end-to-end recall <b>'+pct(cmp.recallE2E)+'</b>. '
+        + 'Plexitrophy calls agree for '+pct(cmp.dAgree)+' of '+cmp.dN+' matched, resolved genotypes ('+cmp.plexiMiss+' missed, '+cmp.plexiFalse+' false'+(cmp.unresolvedMatched?', '+cmp.unresolvedMatched+' unresolved in truth':'')+').' : '')
+      + (O.nSamples<4 ? ' With fewer than 4 samples association is shared presence only.' : '')
+      + ' The observer cannot see leakiness, the medium or enzyme inhibition.';
+  }
+
+  // ---------- knock-outs ----------
+  function refreshKoSel(){
+    var sel = $('koSel'), cur = sel.value;
+    var opts = A.nodes.slice(0,12).filter(function(nd){ return nd.dUsed>=1; });
+    var html = opts.map(function(nd){ return '<option value="'+nd.g+'">'+genoLabel(nd.g)+' (uses '+nd.dUsed+')</option>'; }).join('');
+    if (sel.innerHTML !== html){ sel.innerHTML = html; if (cur) sel.value = cur; }
+  }
+  $('koBtn').onclick = function(){
+    if (koJob) return;
+    var g = +$('koSel').value, plan = C.koPlan(A, g);
+    if (!plan){ $('koOut').textContent = 'Pick a recipient that uses at least one supplier.'; return; }
+    if (plan.tests.length > 12 && !confirm(plan.tests.length+' worlds will be run (all '+plan.suppliers.length+' suppliers are tested). Continue?')) return;
+    var T = +$('koT').value, clones = plan.tests.map(function(t){ var c = C.clone(sim); C.knockOut(c, t.remove); return c; });
+    var acc = plan.tests.map(function(){ return 0; }), done = 0, total = T*clones.length;
+    koJob = true; $('koBtn').disabled = true; $('koOut').textContent = 'running '+clones.length+' counterfactual worlds…';
+    var tStep = 0;
+    function chunk(){
+      var t0 = performance.now();
+      while (tStep < T && performance.now()-t0 < 25){
+        clones.forEach(function(c, i){ C.step(c); if (tStep >= T*0.75) acc[i] += c.gcount[g]; });
+        tStep++; done += clones.length;
+      }
+      $('koBar').style.width = (100*done/total)+'%';
+      if (tStep < T){ setTimeout(chunk, 0); return; }
+      var res = acc.map(function(v){ return v/(T*0.25); }), out = C.koInterpret(plan, res);
+      var html = 'Recipient <b>'+genoLabel(g)+'</b>: all '+out.usedN+' realised supplier(s) (share ≥ 15%) tested; every other genotype stays present in every arm. Control abundance '+out.control.toFixed(1)+'.<br>';
+      out.rows.forEach(function(r){ html += (r.name==='remove' ? 'remove '+genoLabel(r.target) : r.name==='only' ? 'keep only '+genoLabel(r.target) : 'remove all suppliers')
+        + ': '+r.value.toFixed(1)+' ('+(100*r.ratio).toFixed(0)+'% of control) '+(r.survives?'<span class="good">persists</span>':'<span class="bad">collapses</span>')+'<br>'; });
+      var cls = out.status==='at-least' ? 'bad' : (out.status==='inconclusive' || out.status==='ambiguous') ? 'mid' : 'good';
+      html += '<span class="'+cls+'">'+out.label+'</span>'
+        + (out.usedN>=2 && out.status==='one-suffices' ? ' Several suppliers were used, but one suffices.' : '')
+        + ' Persists = ≥ 30% of control abundance; one seed, so treat as noisy.';
+      $('koOut').innerHTML = html; koJob = null; $('koBtn').disabled = false;
+    }
+    chunk();
+  };
+
+  // ---------- challenges ----------
+  var chSel = $('chSel');
+  chSel.innerHTML = C.CHALLENGES.map(function(c,i){ return '<option value="'+i+'">'+c.name+'</option>'; }).join('');
+  function chSetup(){ var c = C.CHALLENGES[+chSel.value]; chState.idx = +chSel.value; chState.streak = 0; chState.done = false;
+    $('chDesc').textContent = c.desc; $('predBox').style.display = c.id==='predict' ? '' : 'none'; $('chBar').style.width='0';
+    $('chBar').parentNode.style.display = c.id==='predict' ? 'none' : ''; $('chStatus').textContent=''; }
+  chSel.onchange = chSetup; $('chReset').onclick = chSetup; chSetup();
+  var lastCheckTick = 0;
+  function checkChallenge(){
+    var c = C.CHALLENGES[chState.idx]; if (!c.check) return;
+    var r = c.check(A, O, samples), dt = sim.tick - lastCheckTick; lastCheckTick = sim.tick;
+    if (chState.done){ $('chStatus').innerHTML = '<span class="good">Completed</span> at tick '+chState.doneAt+'. '+r.label; return; }
+    chState.streak = r.met ? chState.streak + Math.max(1,dt) : 0;
+    var prog = c.hold ? Math.min(1, chState.streak/c.hold) : (r.met?1:0);
+    $('chBar').style.width = (100*prog)+'%';
+    $('chStatus').innerHTML = r.label + (r.met ? ' <span class="good">condition met</span>' : '');
+    if (prog >= 1){ chState.done = true; chState.doneAt = sim.tick;
+      var score = Math.max(10, Math.round(1000 - sim.tick/10));
+      $('scoreLog').innerHTML = '<div>'+c.name+': completed at tick '+sim.tick+', score '+score+' (faster = higher).</div>' + $('scoreLog').innerHTML; }
+  }
+  $('predPct').oninput = function(){ $('predPctV').textContent = $('predPct').value+'%'; };
+  $('predRun').onclick = function(){
+    if (predJob) return;
+    var seeds = [101, 202, 303], worlds = seeds.map(function(s){ return C.create(Object.assign({}, params), s); });
+    var T = 4000, t = 0; predJob = true; $('predRun').disabled = true; var wasRunning = running; running = false; setPlay();
+    $('predOut').textContent = 'running 3 worlds to tick 4000 (main world paused)…';
+    var predP = +$('predPct').value, predT = $('predTopo').value;
+    function chunk(){
+      var t0 = performance.now();
+      while (t < T && performance.now()-t0 < 30){ worlds.forEach(function(w){ C.step(w); }); t++; }
+      $('predBar').style.width = (100*t/T)+'%';
+      if (t < T){ setTimeout(chunk, 0); return; }
+      var res = worlds.map(function(w){ var a = C.analyze(w); return {plexiFrac:a.plexiFrac, topo:a.topoReq, n:a.n}; });
+      var sc = C.predictScore(predP, predT, res);
+      $('predOut').innerHTML = 'Outcomes: ' + res.map(function(r,i){ return 'seed '+seeds[i]+': '+(100*r.plexiFrac).toFixed(0)+'% plexitrophic, '+r.topo+', '+r.n+' cells'; }).join('; ')
+        + '.<br>You predicted '+predP+'% and '+predT+'. Mean outcome '+sc.mean.toFixed(0)+'%, architecture matched '+sc.topoHits+'/3. <b>Score '+sc.score+'</b> (max 145).';
+      $('scoreLog').innerHTML = '<div>Prediction: score '+sc.score+' (pred '+predP+'%/'+predT+', got '+sc.mean.toFixed(0)+'%)</div>' + $('scoreLog').innerHTML;
+      predJob = null; $('predRun').disabled = false; running = wasRunning; setPlay();
+    }
+    chunk();
+  };
+
+  // ---------- main loop ----------
+  function setPlay(){ $('playBtn').textContent = running ? 'Pause' : 'Play'; }
+  $('playBtn').onclick = function(){ running = !running; setPlay(); };
+  $('stepBtn').onclick = function(){ C.step(sim); analyzeNow(); drawField(); };
+  $('resetBtn').onclick = function(){ reset(); };
+  var lastAna = 0;
+  function frame(){
+    if (running && !koJob){
+      var sp = +$('speed').value;
+      for (var i=0;i<sp;i++) C.step(sim);
+      if (sim.tick - lastAna >= 30){ lastAna = sim.tick; analyzeNow(); }
+    }
+    drawField();
+    requestAnimationFrame(frame);
+  }
+  reset(); setPlay(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

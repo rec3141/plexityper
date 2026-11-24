@@ -41,7 +41,7 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
      name-grouped.
    - **RNA rRNA removal.** RNA reads first go through bbduk with SILVA SSU+LSU (k=31). This is
      the same rRNA step as `illumina_rna` QC.
-   - **Counting.** `scratch/p6_field_count.py` b36570e42229, with fixtures
+   - **Counting.** `scratch/p6_field_count.py` 4949b367168c (bounded name-grouping check), with fixtures
      `scratch/test_p6_field_count.py` a9189483ff99 (11/11 OK). The same rule applies to DNA and
      RNA:
      - drop flags 0x4, 0x100 and 0x800;
@@ -56,14 +56,15 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
 
 ## 3. P6 inputs derived from these outputs (rules frozen in P6 / table notes)
 - **Field extractor.** `scratch/p6_field_extract.py`, with fixtures
-  `scratch/test_p6_field_extract.py` (6/6 OK). It replaces the synthetic `extract_run`, which
+  `scratch/test_p6_field_extract.py` (6/6 OK). There is also an end-to-end synthetic test, `scratch/test_p6_field_pipeline.py`. It covers SE+PE SAM → counter → extractor over all 36 scenarios, with zero/nondetect chemistry, nonuniform marker depths, eukaryotic and ambiguous-unbinned exclusions, the anammox exclusions, exact A+B summation, and Cohort/analyse. It replaces the synthetic `extract_run`, which
   hard-codes Tier C plus H2.
   - **Panel.** Core + Tier B_N2O, 11 rows; h2_gated rows are off.
-  - **cap_r,e.** Σ overlap_bp over the CDSs of r, divided by d_prok,e. d_prok,e is the median
+  - **cap_r,e.** Σ overlap_bp over the CDSs of r, divided by d_prok,e. d_prok,e is the true median
     over the 14 marker families of Σ overlap_bp / Σ CDS length, over prokaryotic marker CDSs
     (table notes §2.2).
   - **Binned CDSs.** The frozen classifier with the MAG's KO set. The Tier C nirK/norB
-    exclusions (anammox; AOB without nar/nap) carry over to DEN_NIRNOR and DEN_NOS.
+    exclusions apply to DEN_NIRNOR only. DEN_NOS (K00376) follows its frozen row, which has no
+    anammox exclusion.
   - **Unbinned CDSs.** unambiguous_kos only.
   - **Eukaryotic CDSs** are excluded.
   - **N2.** Weiss (1970) air saturation.
@@ -82,7 +83,7 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
 ## 5. Order and gating
 1. Download and verify spot counts.
 2. Run the assemblies, the pooled reference and mag_analysis.
-3. Run `illumina_rna` up to the per-gene counts (its output, not yet read).
+3. Align and count DNA and RNA per §2.4 (strobealign → `p6_field_count.py`), producing per-gene counts. The counts are not read yet.
 4. Apply the RNA coverage gate once, by the frozen rule.
 5. Score the 36-scenario grid with the frozen scorer, extended only by the P6-A1 chemistry
    supply.

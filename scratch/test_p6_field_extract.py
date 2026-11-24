@@ -24,13 +24,17 @@ def test_binned_tierB_anammox_excluded():
     cl = fx.make_classifier(ROWS, PR)
     nos = [r for r in PR if r['pathway_id'] == 'DEN_NOS'][0]['unambiguous_kos'].split(',')[0]
     assert cl(nos, {nos}) == 'DEN_NOS'
-    assert cl(nos, {nos, 'K20932'}) is None
+    assert cl(nos, {nos, 'K20932'}) == 'DEN_NOS'          # frozen DEN_NOS: no anammox exclusion
+    nir = [r for r in PR if r['pathway_id'] == 'DEN_NIRNOR'][0]['unambiguous_kos'].split(',')[0]
+    assert cl(nir, {nir}) == 'DEN_NIRNOR' and cl(nir, {nir, 'K20932'}) is None
 
 def test_marker_depth_and_capacity_ratio():
     # 14 families, depth 2.0 each -> d_prok 2.0; CDS a: 300 bp overlap, b: 900 bp -> cap 150 : 450
     fam = {f'm{i}': f'F{i}' for i in range(14)}; ln = {f'm{i}': 1000 for i in range(14)}
     ov = {f'm{i}': 2000.0 for i in range(14)}
     d = fx.marker_depth(ov, ln, fam); assert d == 2.0
+    ov2 = {f'm{i}': 1000.0 * (i + 1) for i in range(14)}        # depths 1..14 -> median 7.5
+    assert fx.marker_depth(ov2, ln, fam) == 7.5
     assert (300 / d, 900 / d) == (150.0, 450.0)
 
 def test_n2_air_sat():

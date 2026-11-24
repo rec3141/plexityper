@@ -1,8 +1,9 @@
 """P6 field counting: one assignment rule for DNA (capacity) and RNA (expression).
 
 Protocol: P6 (frozen) + P6-A1 (approved) + run spec; table notes §5.2.
-Input: SAM text (e.g. `samtools view -h` or a strobealign stream), grouped so that all records of
-one read name are contiguous (name-grouped/collated; coordinate-sorted input is rejected for PE).
+Input: SAM text, grouped so that all records of one read name are contiguous. Production input is
+strobealign output streamed in read order (grouped by construction). Grouping is checked over a
+bounded window of the last 200,000 names (constant memory); a violation raises ValueError.
 CDS table: TSV with columns cds_id, contig, start (1-based), end (inclusive).
 
 Rules (identical for DNA and RNA):
@@ -100,7 +101,7 @@ def count(sam_lines, idx, min_mapq=0):
         if cid:
             frag[cid] += 1; bp[cid] += acc[cid]
 
-    names_done = set()
+    recent = collections.deque(maxlen=200000); recent_set = set()   # bounded grouping check
     for line in sam_lines:
         if line.startswith('@'):
             continue
@@ -108,10 +109,12 @@ def count(sam_lines, idx, min_mapq=0):
         qn, flag, rname, pos, mapq, cigar = f[0], int(f[1]), f[2], int(f[3]), int(f[4]), f[5]
         if qn != cur:
             flush()
-            if qn in names_done:
+            if qn in recent_set:
                 raise ValueError(f'read {qn} not contiguous: input must be name-grouped')
             if cur is not None:
-                names_done.add(cur)
+                if len(recent) == recent.maxlen:
+                    recent_set.discard(recent[0])
+                recent.append(cur); recent_set.add(cur)
             cur, blocks, seen_primary = qn, collections.defaultdict(list), False
         if flag & DROP or mapq < min_mapq or cigar == '*':
             continue

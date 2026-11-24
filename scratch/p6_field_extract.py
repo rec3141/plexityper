@@ -8,9 +8,9 @@ the codex-plexi run-spec review (251098919257686016):
   median over the 14 prokaryotic single-copy marker families of (sum overlap_bp / sum CDS length)
   over prokaryotic marker CDSs (table notes §2.2). overlap_bp comes from p6_field_count.py, the
   same assignment used for RNA.
-- Binned CDS: frozen make_binned_ko_classifier with the MAG's KO set. The Tier-C-specific
-  nirK/norB exclusions (anammox carriers; AOB hao/K28504 without nar/nap) are applied to the
-  Tier B rows they replace (DEN_NIRNOR, DEN_NOS).
+- Binned CDS: frozen make_binned_ko_classifier with the MAG's KO set. The Tier-C nirK/norB
+  exclusions (anammox carriers; AOB hao/K28504 without norB/nosZ) apply to DEN_NIRNOR only;
+  DEN_NOS (K00376) follows its frozen row without an anammox exclusion.
 - Unbinned CDS: unambiguous_kos only (P6 'KO and direction collisions': ambiguous KOs are not
   assigned on unbinned contigs).
 - Eukaryotic CDS (Tiara eukarya / organelle) are excluded from panel and marker depth.
@@ -57,10 +57,12 @@ def make_classifier(all_rows, prows):
         if kset is None:                         # unbinned: directional markers only
             return unamb.get(ko)
         pid, _ = binned(ko, kset)
-        if pid in TIERB_ROWS:
-            if "K20932" in kset:                 # anammox carrier
+        if pid == "DEN_NIRNOR":
+            # the frozen DEN_NO2N2 exclusions apply to the nir/nor KOs it pooled; the frozen
+            # DEN_NOS row (K00376) carries no anammox exclusion (codex-plexi 251099827689406464)
+            if "K20932" in kset:
                 return None
-            if ("K10535" in kset or "K28504" in kset) and not ({"K04561", "K00376"} & kset) and pid == "DEN_NIRNOR":
+            if ("K10535" in kset or "K28504" in kset) and not ({"K04561", "K00376"} & kset):
                 return None
         return pid if pid in active else None
     return classify
@@ -71,9 +73,9 @@ def marker_depth(overlap_bp, cds_len, cds_marker_family):
     for cid, fam in cds_marker_family.items():
         fam_num[fam] = fam_num.get(fam, 0.0) + overlap_bp.get(cid, 0.0)
         fam_den[fam] = fam_den.get(fam, 0.0) + cds_len[cid]
-    d = sorted(fam_num[f] / fam_den[f] for f in fam_den if fam_den[f] > 0)
+    d = [fam_num[f] / fam_den[f] for f in fam_den if fam_den[f] > 0]
     assert d, "no marker CDS"
-    return d[len(d) // 2]
+    return statistics.median(d)   # true median (codex-plexi 251099827689406464)
 
 
 def n2_air_sat_uM(T_K, S):
@@ -134,3 +136,94 @@ def model_probs(caps, w):
          "M_capKT": [c * fk * ft for c, (fk, ft, y) in zip(caps, w)],
          "M_power": [c * fk * ft * y for c, (fk, ft, y) in zip(caps, w)]}
     return {m: bv.safe_probs(W[m], caps, EPS_OBS) for m in MODELS}
+
+
+# ---------------------------------------------------------------- P6-A1 chemistry supply
+FALLBACK_DL_UM = 0.01   # table notes §3.3
+
+
+def _half_dl(v):
+    """nondetect ('0' or blank-as-zero) -> 1/2 DL with 0.01 uM fallback DL."""
+    return v if v > 0 else 0.5 * FALLBACK_DL_UM
+
+
+def scenario_grid():
+    """P6-A1 §3: 4 pH x 3 DIC x 3 DOC = 36 scenarios. pH 'lin' = 8.0 at 10 m -> 7.4 at 200 m."""
+    out = []
+    for ph in (7.4, 7.7, 8.0, 'lin'):
+        for dic in (1900.0, 2100.0, 2300.0):
+            for doc in (50.0, 75.0, 100.0):
+                out.append({'pH': ph, 'DIC': dic, 'DOC': doc})
+    assert len(out) == 36
+    return out
+
+
+CENTRAL = {'pH': 'lin', 'DIC': 2100.0, 'DOC': 75.0}
+
+
+def ph_at(ph, depth_m):
+    if ph != 'lin':
+        return float(ph)
+    d = min(max(depth_m, 10.0), 200.0)
+    return 8.0 + (7.4 - 8.0) * (d - 10.0) / 190.0
+
+
+def build_chem(raw, ctd, scen, sulfide_so4=0.0):
+    """raw: Dryad Chemical row values (uM; CH4/N2O in nM). ctd: dict T_C, S, sigma_theta.
+    sulfide_so4: coefficient for the S-SO4 sensitivity (0 primary; 0.5 approved; 1.0 diagnostic)."""
+    T_K = ctd['T_C'] + 273.15
+    S = ctd['S']
+    rho = (1000.0 + ctd['sigma_theta']) / 1000.0
+    H2S = _half_dl(raw['H2S'])
+    so4 = 28.24 * S / 35.0 * rho * 1000.0 - sulfide_so4 * H2S
+    return dict(T_K=T_K, S=S, rho=rho, pH=ph_at(scen['pH'], raw['depth']), DIC_umolkg=scen['DIC'],
+                DOC_uM=scen['DOC'], O2=_half_dl(raw['O2']), NO3=_half_dl(raw['NO3']), NO2=_half_dl(raw['NO2']),
+                TAN=_half_dl(raw['NH4']), SO4_uM=so4, H2S=H2S,
+                CH4_uM=_half_dl(raw['CH4_nM'] / 1000.0), N2O_uM=_half_dl(raw['N2O_nM'] / 1000.0),
+                N2_uM=n2_air_sat_uM(T_K, S))
+
+
+# ---------------------------------------------------------------- event assembly
+def build_events(cds, run_counts, run_event, chem_by_event, scen, all_rows, sp, sulfide_so4=0.0):
+    """cds: {cds_id: dict(length, mag (None if unbinned), ko, euk(bool), marker_family or None)}
+    mag_kos derived from cds. run_counts: {run: {'kind': 'DNA'|'RNA', 'counts': {cds: (frag, bp)}}}.
+    run_event: {run: event_id}. chem_by_event: {event: (raw, ctd, block)}.
+    Returns events for p6_scorer.Cohort: sample_id, cast_id (=block), O2_uM, N_panel, counts, probs."""
+    prows = panel_rows(all_rows)
+    pidx = {r['pathway_id']: i for i, r in enumerate(prows)}
+    classify = make_classifier(all_rows, prows)
+    mag_kos = {}
+    for c in cds.values():
+        if c['mag'] and not c['euk'] and c['ko']:
+            mag_kos.setdefault(c['mag'], set()).add(c['ko'])
+    cds_pid = {}
+    for cid, c in cds.items():
+        if c['euk']:
+            continue
+        pid = classify(c['ko'], mag_kos.get(c['mag'], set()) if c['mag'] else None)
+        if pid is not None:
+            cds_pid[cid] = pid
+    markers = {cid: c['marker_family'] for cid, c in cds.items() if c.get('marker_family') and not c['euk']}
+    lengths = {cid: c['length'] for cid, c in cds.items()}
+    dna_bp, rna_n = {}, {}
+    for run, rc in run_counts.items():
+        ev = run_event[run]
+        tgt = dna_bp if rc['kind'] == 'DNA' else rna_n
+        acc = tgt.setdefault(ev, {})
+        for cid, (frag, bp) in rc['counts'].items():
+            acc[cid] = acc.get(cid, 0) + (bp if rc['kind'] == 'DNA' else frag)
+    events = []
+    for ev in sorted(chem_by_event):
+        if ev not in dna_bp or ev not in rna_n:
+            continue
+        raw, ctd, block = chem_by_event[ev]
+        d = marker_depth(dna_bp[ev], lengths, markers)
+        caps = [0.0] * len(prows); counts = [0] * len(prows)
+        for cid, pid in cds_pid.items():
+            caps[pidx[pid]] += dna_bp[ev].get(cid, 0.0) / d
+            counts[pidx[pid]] += rna_n[ev].get(cid, 0)
+        chem = build_chem(raw, ctd, scen, sulfide_so4)
+        w = event_weights(prows, sp, chem)
+        events.append(dict(sample_id=ev, cast_id=block, O2_uM=chem['O2'], N_panel=sum(counts),
+                           counts=counts, probs=model_probs(caps, w), caps=caps, d_prok=d))
+    return events

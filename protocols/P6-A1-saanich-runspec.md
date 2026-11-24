@@ -29,17 +29,41 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
    - Only the contig FASTAs are used. **MGnify's CDS, eggNOG/KO and other annotations are not
      used.**
    - Download: `scratch/p6_saanich_mgnify_contigs.sh`, with sha256 manifest `SHA256SUMS`.
-2. **Pooled reference.** Concatenate the 39 contig sets, prefixing contig IDs with the assembly
-   accession, and dereplicate at the contig level with BBTools dedupe (defaults; danaSeq
-   container). This gives `saanich_pooled.fasta`.
-   - A pooled, not per-event, reference keeps one gene catalogue across events, so capacity and
-     RNA counts are measured on the same features.
-   - **DNA mapping for binning.** All 39 DNA runs go through strobealign to the pooled
-     reference. The read-order output is teed to `p6_field_count.py` (§2.4) and also
-     coordinate-sorted for `jgi_summarize_bam_contig_depths` (danaSeq container). That gives
-     the `--depths` file and `--bam_dir` input for mag_analysis.
-3. **Annotation and binning.** `mag_analysis --assembly saanich_pooled.fasta --depths <jgi depths>
-   --bam_dir <sorted DNA BAMs>`, with default settings.
+2. **Pooled reference (revised after codex-plexi 251106296249892864).**
+   - **File check before pooling.** The download must give exactly the 39 nonempty, gzip-valid
+     FASTAs named in `mgnify_dna_crosswalk.tsv`, compared by name against the crosswalk. Any
+     missing or extra file aborts the step.
+   - **Contig IDs** are prefixed `<ERZ accession>__`.
+   - **Dedupe:** the danaSeq `illumina_assembly` cascade (modules/dedupe.nf), unchanged:
+     - `dedupe.sh sort=length uniquenames=t minidentity=100`
+     - then `minidentity=99`
+     - then `minidentity=98`
+     - then `reformat.sh minlength=500`
+     
+     This is run with BBTools in the danaSeq container and gives `saanich_pooled.fasta`.
+   - **DNA mapping (once).** All 39 DNA runs go through strobealign to `saanich_pooled.fasta`,
+     producing `<SRR>.sorted.bam` plus .bai. `jgi_summarize_bam_contig_depths` on these gives
+     the `--depths` table, and the BAM directory is `--bam_dir`.
+   - **After annotation (§2.3)**, each DNA BAM is name-collated (`samtools collate -O`) and its SAM
+     records are fed to `p6_field_count.py` with the pooled-reference CDS table. The DNA runs are
+     not remapped.
+3. **Annotation and binning.** `mag_analysis --apptainer --gpu true --assembly saanich_pooled.fasta
+   --depths <jgi depths> --bam_dir <sorted DNA BAMs> --run_eukaryotic true --run_gtdbtk true`.
+   It runs inside one Fir SLURM job on a GPU partition (H100) using the danaSeq `-gpu` image.
+   - **Binners (grid asked us to check binners and GPU use):**
+     - MetaBAT2 (default, CPU);
+     - SemiBin2, COMEBin and VAMB, trained on GPU (`--run_semibin --run_comebin --run_vamb`);
+     - DAS Tool consensus. Bins from the DAS Tool set are used.
+   - **Binners left off:**
+     - MaxBin2, which is CPU-only and held about 50 GB on the marine co-assembly;
+     - LorBin, which is long-read oriented (`lorbin_min_length` 80 kb), while these are
+       short-read contigs;
+     - Binette.
+   - **GPU guard.** If the GPU image or device is missing, the run must stop rather than fall
+     back to CPU. The job log is checked for the "running on CPU" warning before results are
+     used.
+   - **Resources.** `--binning_cpus`, `--binning_memory`, `--bakta_cpus` and `--bakta_memory` are
+     set to the job allocation, as the pipeline notes advise for large co-assemblies.
    - Bakta annotation with coordinate-joined KOs (trap 3).
    - Binning (DAS Tool set), CheckM2 and GTDB-Tk.
    - KO calls follow the pipeline's merged annotations. The frozen table's
@@ -93,11 +117,16 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
   ½ × ΣH₂S is kept as written, and 1 × ΣH₂S is also reported. The effect is about 0.04%.
 
 ## 5. Order and gating
-1. Download and verify spot counts.
-2. Run the assemblies, the pooled reference and mag_analysis.
-3. Align and count DNA and RNA per §2.4 (strobealign → `p6_field_count.py`), producing per-gene counts. The counts are not read yet.
-4. Apply the RNA coverage gate once, by the frozen rule.
-5. Score the 36-scenario grid with the frozen scorer, extended only by the P6-A1 chemistry
+1. Download the reads (verified against SRA spots) and the 39 MGnify contig sets (reconciled
+   against the crosswalk).
+2. Build the pooled reference (§2.2 cascade). Map the 39 DNA runs once to sorted BAMs, then
+   compute JGI depths.
+3. Run mag_analysis (§2.3; GPU binners; KOfam; Tiara), which produces the CDS table and bins.
+4. Name-collate the DNA BAMs into `p6_field_count.py`. Map the 54 RNA runs (after SILVA rRNA
+   removal) with strobealign into `p6_field_count.py`. This gives per-gene counts, which are
+   not read yet.
+5. Apply the RNA coverage gate once, by the frozen rule.
+6. Score the 36-scenario grid with the frozen scorer, extended only by the P6-A1 chemistry
    supply.
 
 Compute: no de novo assembly (MGnify contigs). The costs are the dedupe, mapping of about 1.1 Tbp of reads, and mag_analysis, on SLURM under def-rec3141. Job IDs and resource use are logged in `notes/claude-plexi.md`.

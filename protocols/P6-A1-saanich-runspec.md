@@ -19,15 +19,27 @@
 
 ## 2. Reference: one gene catalogue shared by all events
 All steps use grid's danaSeq pipelines and containers. No new installs.
-1. **Per-event metaG assembly.** `illumina_assembly` with the Apptainer profile on SLURM, one
-   sample per event, default assemblers, output `<sample>.dedupe.fasta`.
-2. **Pooled reference.** Concatenate all 38 per-event `dedupe.fasta` files and dereplicate at the
-   contig level with the pipeline's dedupe step (BBTools dedupe, defaults), giving
-   `saanich_pooled.fasta`.
+1. **Per-event metaG contigs from MGnify (grid's go in chat, 2026-11-24: "go ahead with the mgnify
+   contigs on fir").** Instead of running `illumina_assembly`, the processed contigs come from
+   MGnify MGYS00005865 (pipeline v5.0). There are 39 assemblies for the 38 roster DNA BioSamples
+   (crosswalk `mgnify_dna_crosswalk.tsv`, reviewed by codex-plexi 251104688602529792).
+   - Each assembly is built from exactly one roster DNA run, and no assembly is shared.
+   - SAMN05224393 has two assemblies, one per run.
+   - No RNA run is a source.
+   - Only the contig FASTAs are used. **MGnify's CDS, eggNOG/KO and other annotations are not
+     used.**
+   - Download: `scratch/p6_saanich_mgnify_contigs.sh`, with sha256 manifest `SHA256SUMS`.
+2. **Pooled reference.** Concatenate the 39 contig sets, prefixing contig IDs with the assembly
+   accession, and dereplicate at the contig level with BBTools dedupe (defaults; danaSeq
+   container). This gives `saanich_pooled.fasta`.
    - A pooled, not per-event, reference keeps one gene catalogue across events, so capacity and
      RNA counts are measured on the same features.
-3. **Annotation and binning.** `mag_analysis` on `saanich_pooled.fasta`, with all 38 metaG
-   read sets for depth, default settings.
+   - **DNA mapping for binning.** All 39 DNA runs go through strobealign to the pooled
+     reference. The read-order output is teed to `p6_field_count.py` (§2.4) and also
+     coordinate-sorted for `jgi_summarize_bam_contig_depths` (danaSeq container). That gives
+     the `--depths` file and `--bam_dir` input for mag_analysis.
+3. **Annotation and binning.** `mag_analysis --assembly saanich_pooled.fasta --depths <jgi depths>
+   --bam_dir <sorted DNA BAMs>`, with default settings.
    - Bakta annotation with coordinate-joined KOs (trap 3).
    - Binning (DAS Tool set), CheckM2 and GTDB-Tk.
    - KO calls follow the pipeline's merged annotations. The frozen table's
@@ -88,5 +100,4 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
 5. Score the 36-scenario grid with the frozen scorer, extended only by the P6-A1 chemistry
    supply.
 
-Compute is substantial: per-event assembly of about 514 Gbp of metaG, on SLURM under
-def-rec3141. Job IDs and resource use are logged in `notes/claude-plexi.md`.
+Compute: no de novo assembly (MGnify contigs). The costs are the dedupe, mapping of about 1.1 Tbp of reads, and mag_analysis, on SLURM under def-rec3141. Job IDs and resource use are logged in `notes/claude-plexi.md`.

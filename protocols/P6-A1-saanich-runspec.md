@@ -32,15 +32,42 @@ All steps use grid's danaSeq pipelines and containers. No new installs.
    - Binning (DAS Tool set), CheckM2 and GTDB-Tk.
    - KO calls follow the pipeline's merged annotations. The frozen table's
      `make_binned_ko_classifier` disambiguation then uses the MAG membership.
-4. **RNA mapping.** `illumina_rna --from_mag <mag_analysis out>` with default QC: adapter trim,
-   rRNA split against SILVA, strobealign and featureCounts per gene.
-   - Human removal is skipped because these are marine samples.
-   - The setting is fixed now (`--human_ref` not given) rather than tuned later.
+4. **DNA and RNA mapping and counting: one path for both (revised after codex-plexi
+   251098919257686016).**
+   - **Why not `illumina_rna`.** It is not used for counting, because it skips single-end
+     libraries. The RNA layouts are 37 SE and 17 PE runs; the 39 DNA runs are all PE.
+   - **Alignment.** Each run is aligned to `saanich_pooled.fasta` with strobealign from the
+     danaSeq container, in SE or PE mode per run. Output stays in read order, so it is
+     name-grouped.
+   - **RNA rRNA removal.** RNA reads first go through bbduk with SILVA SSU+LSU (k=31). This is
+     the same rRNA step as `illumina_rna` QC.
+   - **Counting.** `scratch/p6_field_count.py` b36570e42229, with fixtures
+     `scratch/test_p6_field_count.py` a9189483ff99 (11/11 OK). The same rule applies to DNA and
+     RNA:
+     - drop flags 0x4, 0x100 and 0x800;
+     - one count per SE read or PE fragment;
+     - mates' aligned blocks are unioned, so a base covered by both mates counts once;
+     - the fragment goes to the CDS with strictly the largest aligned-base overlap, and exact
+       ties are dropped;
+     - the output gives both fragments and overlap_bp per CDS;
+     - MAPQ ≥ 20 is a sensitivity.
+   - **Event totals.** All 54 RNA runs are summed into their 38 event totals (A/B libraries
+     together); the DNA runs are summed the same way.
 
 ## 3. P6 inputs derived from these outputs (rules frozen in P6 / table notes)
-- **cap_r,e.** Gene depth × effective length per event, from each event's metaG mapping to the
-  pooled reference. It is normalised by prokaryotic single-copy marker depth and computed as
-  in `scratch/p6_scorer.py` `extract_run`.
+- **Field extractor.** `scratch/p6_field_extract.py`, with fixtures
+  `scratch/test_p6_field_extract.py` (6/6 OK). It replaces the synthetic `extract_run`, which
+  hard-codes Tier C plus H2.
+  - **Panel.** Core + Tier B_N2O, 11 rows; h2_gated rows are off.
+  - **cap_r,e.** Σ overlap_bp over the CDSs of r, divided by d_prok,e. d_prok,e is the median
+    over the 14 marker families of Σ overlap_bp / Σ CDS length, over prokaryotic marker CDSs
+    (table notes §2.2).
+  - **Binned CDSs.** The frozen classifier with the MAG's KO set. The Tier C nirK/norB
+    exclusions (anammox; AOB without nar/nap) carry over to DEN_NIRNOR and DEN_NOS.
+  - **Unbinned CDSs.** unambiguous_kos only.
+  - **Eukaryotic CDSs** are excluded.
+  - **N2.** Weiss (1970) air saturation.
+  - **Chemistry.** The P6-A1 supply and the 36-scenario grid.
 - **n_r,e.** Uniquely assigned panel RNA reads per event, summed over its A/B libraries.
   Read-assignment rules follow table notes §5.2.
 - **Unbinned contigs** enter through community annotation, as in frozen P6. **Eukaryotic

@@ -11,15 +11,28 @@
   `notes/p6-external-data-scan.md`.
 
 ## 1. Cohort
+- **Pairing is a cruise × depth proxy.**
+  - The ISA DNA and RNA assay tables share **no** BioSample accessions (codex-plexi
+    251092895373115392). Same-bottle or same-cast pairing is therefore *not established*. It
+    needs an outcome-blind crosswalk of the sampling records.
+  - The **primary estimand is explicitly a cruise × depth proxy pairing**: DNA and RNA taken
+    on the same cruise at the same nominal depth. **This differs from frozen P6's
+    "same bottle, cast and depth" requirement and needs grid's separate approval.**
+  - The **strict set**, meaning pairs whose same-bottle or same-cast status and compatible
+    filter fraction are documented by the crosswalk, is reported separately with all gates
+    recomputed. It may be empty.
 - **Events.** Saanich Inlet station S3 (SI03). An event is a cruise × depth that has both a
   metagenome and a metatranscriptome in Table S2.
   - That gives 44 sample IDs and 43 unique cruise × depth keys.
-  - Cruise 75 at 135 m appears twice. If both IDs map to the same BioSample, or to libraries from
-    one bottle, they are collapsed into one event as replicate libraries. Otherwise the first ID
-    in Table S2 order is used and the second is dropped. This is decided from BioSample metadata
-    before any RNA is opened.
-- **Blocks.** The independent block is the cruise. There are 8 cruises: 42, 47, 48, 54, 72, 73, 74
-  and 75 (2010–2012).
+  - **Multiple IDs for one key** (cruise 75 at 135 m appears twice):
+    - First keep only provenance-eligible pairs (fraction compatible, not flagged).
+    - If more than one remains and they share a BioSample or bottle, collapse them as
+      replicate libraries.
+    - Otherwise take the first eligible ID in Table S2 order.
+    - All of this is decided from metadata before any RNA is opened.
+- **Blocks.** The independent block is the **cruise**, standing in for the cast. Cast IDs are not
+  recorded, and the chemistry comes from one cast per cruise. The substitution is reported as
+  such. There are 8 cruises: 42, 47, 48, 54, 72, 73, 74 and 75 (2010–2012).
 - **Redox regime.** An event is oxic if CTD_O2 ≥ 10 µM and suboxic/anoxic otherwise, using
   Dryad Chemical `CTD_O2`.
 - **Gate check on metadata.**
@@ -47,10 +60,12 @@
 | TAN (NH₄⁺ + NH₃) | `Mean_NH4` (µM) |
 | ΣH₂S | `Mean_H2S` (µM) |
 | CH₄, N₂O | `Mean_CH4`, `Mean_N2O`. The README gives these in **nM**, so they are converted to µM. |
-| N₂ | `Mean_N2` (µM) when present; otherwise air-saturation (table notes §1.5) |
+| N₂ | Air-saturation at in-situ T and S (table notes §1.5). `Mean_N2` is finite for 0 of the 42 retained events, so this applies to all of them. |
 | Nondetects (`0`) | ½ DL, with a 0.01 µM fallback (table notes §3.3), applied identically to F_K and ln Q |
-| T, S | Dryad CTD at the nearest pressure within ±2 dbar of the sample depth. Cruise 42 has no CTD, and for cruise 54 (CTD to 197 dbar) the 200 m sample takes the 197 dbar value. Where CTD is missing, use the median T and S at that depth over all S3 casts in the same calendar month (flagged). |
-| SO₄²⁻ | Conservative with salinity: 28.24 mmol kg⁻¹ × S/35 (SO₄/Cl seawater ratio), not corrected for sulfate reduction. Sensitivity: subtract ½ × ΣH₂S. |
+| T, S, ρ | Dryad CTD (Temperature, Salinity, Density) at the nearest pressure within ±2 dbar of the sample depth. |
+| T, S, ρ: cruise 54 at 200 m | **Documented exception:** the CTD stops at 197 dbar, so the 197 dbar values are used (flagged). |
+| T, S, ρ: cruise 42 | No CTD. Use the median at that depth (±2 dbar) over all S3 casts in the same calendar month of other years. If none exist, take the nearest calendar month that has a match. If still none, the event is excluded. Flagged. |
+| SO₄²⁻ | Conservative with salinity: 28.24 mmol kg⁻¹ × S/35 (seawater SO₄/salinity ratio). Converted to µM as mmol kg⁻¹ × ρ (kg L⁻¹) × 1000. Sensitivity S-SO4 subtracts ½ × ΣH₂S, after both are in µM. |
 | H₂ | Not measured, so the `h2_gated` rows (MCR_MET, HYD_FERM, HYD_UP) are **inactive**. |
 | Denitrification tier | N₂O is measured and NO is not, so **Tier B_N2O** applies (DEN_NIRNOR + DEN_NOS), on the common-panel rule (table notes §1.1). |
 | **pH, DIC, DOC** | **Not measured anywhere. They are supplied as a pre-registered assumption grid (§3).** |
@@ -60,8 +75,11 @@ None of these values comes from a measured Saanich profile; they are scenario va
 - **pH, 4 scenarios.**
   - Three are depth-invariant: 7.4, 7.7 and 8.0.
   - One is depth-linear: 8.0 at 10 m falling to 7.4 at 200 m, interpolated on depth.
-- **DIC, 3 scenarios.** 1900, 2100 and 2300 µmol kg⁻¹. HCO₃⁻ is speciated from DIC, pH and T
-  using the table's carbonate constants.
+- **pH scale.** The scenario pH values are read as **total-scale** pH. a_H+ = 10^−pH is used as
+  in the frozen code. This mixes scales for the frozen thermodynamic convention, so it is
+  stated as an approximation.
+- **DIC, 3 scenarios.** 1900, 2100 and 2300 µmol kg⁻¹. Converted to µM as × ρ (kg L⁻¹), using
+  CTD density. HCO₃⁻ is speciated from DIC, pH and T with the table's carbonate constants.
 - **DOC, 3 scenarios.** 50, 75 and 100 µM C. The model donor is acetate = 0.05 × DOC (table
   notes §3.3).
   - DOC is a substantive assumption. A fixed DOC changes heterotroph shares relative to the other
@@ -70,10 +88,12 @@ None of these values comes from a measured Saanich profile; they are scenario va
     (Carbon 251077656854315008).
 - **Central scenario.** Depth-linear pH, DIC 2100, DOC 75.
 - **Robustness rule.** The full grid has 4 × 3 × 3 = 36 scenarios, and all of them are scored.
-  - The Saanich verdict is the frozen band (Supported, Equivalent, Against) only if **all 36**
-    scenarios give the same band.
-  - Otherwise the verdict is **"Inconclusive (assumption-sensitive)"**, and the central-scenario
-    result is reported descriptively.
+  The report gives band counts plus Δ, Δ_gate and Δ_weight with intervals for every scenario.
+  - **All 36 give the same decisive band** (Supported, Equivalent or Against): that band is the
+    verdict.
+  - **All 36 are Inconclusive:** the verdict is "Inconclusive (insufficient precision across
+    the tested grid)".
+  - **The bands differ across scenarios:** the verdict is "Inconclusive (assumption-sensitive)".
   - The Δ_weight condition for "allocation follows power" must also hold in all 36 scenarios.
 
 ## 4. Analysis, as frozen except where noted
@@ -99,6 +119,9 @@ None of these values comes from a measured Saanich profile; they are scenario va
     This donor mismatch is a known caveat (Carbon 251077656854315008).
   - S-K: all K values × 2 and × 0.5 (frozen threat 4).
   - S-eps: ε_obs of 10⁻⁵ and 10⁻³.
+  - S-TSmeas: measured T and S only, which drops cruise 42. That leaves 7 cruises and 36
+    chemistry-complete keys before the other gates.
+  - S-strict: the strict same-bottle/cast set (§1), with gates recomputed.
 
 ## 5. Interpretation limits, stated in advance
 - Saanich is one station, so a verdict generalises to this seasonally anoxic fjord, not to
@@ -110,7 +133,8 @@ None of these values comes from a measured Saanich profile; they are scenario va
 - Expression is not flux, and bulk-water chemistry misses microenvironments (frozen threats 1–2).
 
 ## 6. Before running
-1. Cross-family review of this addendum (codex-plexi), then grid's approval.
+1. Cross-family review of this addendum (codex-plexi), then grid's approval. The approval must
+   explicitly cover the cruise × depth **proxy** pairing as the primary estimand.
 2. Provenance audit (§1) from BioSample metadata only.
 3. Run spec for assembly and mapping, with its hash posted.
 4. Data download (SRA/JGI, PRJNA247822). This is large and needs grid's go for compute

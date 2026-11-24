@@ -99,3 +99,18 @@ See data/external/saanich/biosample_20261124/AUDIT.md (local only).
 - Strict roster: 0 events; bottle and cast are undocumented.
 - Fractions are compatible (0.22–2.7 µm).
 - The cruise 42 DNA assignment is inferred from 'F_10'.
+
+## MGnify check (grid's suggestion, 2026-11-24)
+- **MGYS00005865** ("EMG produced TPA metagenomics assembly of PRJNA247822", pipeline v5.0) has
+  141 assembly analyses over 138 samples.
+  - It covers **all 38 roster DNA BioSamples**, and 49 of 54 RNA.
+  - Each analysis offers: processed contigs, predicted CDS (aa/nt), a combined GFF
+    (eggNOG/InterPro/antiSMASH), a per-CDS eggNOG TSV with KEGG KOs, a KEGG orthologues
+    table, InterPro and Pfam.
+- MGYS00005850 is the raw SRP043213 study; its v5 analyses are amplicon.
+- **No MAGs:** the MGnify genome catalogues have no PRJNA247822 genomes. Marine v2.0 (13,223
+  species) holds cross-study representatives, not per-sample bins.
+- **Consequence:** the per-event assembly step (the most expensive part of the run spec) can
+  be replaced by the MGnify per-sample assemblies with their per-CDS KO annotation. Binning
+  would still be needed for the binned-KO classifier, or the primary could treat all contigs as
+  unbinned (unambiguous KOs only). Either way is a run-spec change that needs cross-family review.

@@ -18,14 +18,19 @@
   - The **primary estimand is explicitly a cruise × depth proxy pairing**: DNA and RNA taken
     on the same cruise at the same nominal depth. **This differs from frozen P6's
     "same bottle, cast and depth" requirement and needs grid's separate approval.**
-  - The **strict set**, meaning pairs whose same-bottle or same-cast status and compatible
-    filter fraction are documented by the crosswalk, is reported separately with all gates
-    recomputed. It may be empty.
+  - The **strict set** follows frozen P6: the crosswalk must document the same bottle **and**
+    the same cast **and** the same depth **and** a compatible filter fraction. It is reported
+    separately, with all gates recomputed, and may be empty.
+  - The **proxy set** requires the same cruise, the same nominal depth and a compatible filter
+    fraction (or an unflagged one). It does not require proof of bottle or cast.
 - **Events.** Saanich Inlet station S3 (SI03). An event is a cruise × depth that has both a
   metagenome and a metatranscriptome in Table S2.
   - That gives 44 sample IDs and 43 unique cruise × depth keys.
   - **Multiple IDs for one key** (cruise 75 at 135 m appears twice):
-    - First keep only provenance-eligible pairs (fraction compatible, not flagged).
+    - Duplicates are resolved separately for each roster, using that roster's own eligibility
+      rules. Missing bottle proof does not eliminate a duplicate-key pair from the proxy roster
+      while other proxies remain.
+    - First keep only pairs eligible for that roster.
     - If more than one remains and they share a BioSample or bottle, collapse them as
       replicate libraries.
     - Otherwise take the first eligible ID in Table S2 order.
@@ -35,7 +40,8 @@
   such. There are 8 cruises: 42, 47, 48, 54, 72, 73, 74 and 75 (2010–2012).
 - **Redox regime.** An event is oxic if CTD_O2 ≥ 10 µM and suboxic/anoxic otherwise, using
   Dryad Chemical `CTD_O2`.
-- **Gate check on metadata.**
+- **Gate check on metadata.** These are **pre-audit counts under the proxy pairing**. All gates
+  are recomputed on each final roster (proxy, strict, S-TSmeas).
   - Every cruise has at least one oxic and at least one suboxic/anoxic event, giving 8 blocks of
     each.
   - Complete-case chemistry is 42 events. Cruise 73 at 200 m lacks H₂S, CH₄ and N₂O, and is
@@ -62,7 +68,8 @@
 | CH₄, N₂O | `Mean_CH4`, `Mean_N2O`. The README gives these in **nM**, so they are converted to µM. |
 | N₂ | Air-saturation at in-situ T and S (table notes §1.5). `Mean_N2` is finite for 0 of the 42 retained events, so this applies to all of them. |
 | Nondetects (`0`) | ½ DL, with a 0.01 µM fallback (table notes §3.3), applied identically to F_K and ln Q |
-| T, S, ρ | Dryad CTD (Temperature, Salinity, Density) at the nearest pressure within ±2 dbar of the sample depth. |
+| T, S | Dryad CTD (Temperature, Salinity) at the nearest pressure within ±2 dbar of the sample depth. |
+| ρ | The Dryad `Density` column is **σθ** (potential density anomaly; CTD README). It is used as a potential-density approximation, ρ = (1000 + σθ)/1000 kg L⁻¹. Example row: σθ 21.205 → 1.021205 kg L⁻¹. The same rule applies to the climatology fallback. |
 | T, S, ρ: cruise 54 at 200 m | **Documented exception:** the CTD stops at 197 dbar, so the 197 dbar values are used (flagged). |
 | T, S, ρ: cruise 42 | No CTD. Use the median at that depth (±2 dbar) over all S3 casts in the same calendar month of other years. If none exist, take the nearest calendar month that has a match. If still none, the event is excluded. Flagged. |
 | SO₄²⁻ | Conservative with salinity: 28.24 mmol kg⁻¹ × S/35 (seawater SO₄/salinity ratio). Converted to µM as mmol kg⁻¹ × ρ (kg L⁻¹) × 1000. Sensitivity S-SO4 subtracts ½ × ΣH₂S, after both are in µM. |

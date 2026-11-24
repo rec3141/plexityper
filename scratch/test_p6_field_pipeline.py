@@ -95,6 +95,12 @@ def test_full_path():
     res = ps.analyse(co.n, co.P, co.block, co.C, 199, np.random.default_rng(1))
     assert all(math.isfinite(res[k]['est']) for k in ('Delta', 'Delta_gate', 'Delta_weight'))
     assert nA + nB >= 0
+    try:
+        fx.build_events(cds, {k: v for k, v in run_counts.items() if k != 'E0_RB'}, run_event, chem,
+                        fx.CENTRAL, ROWS, SP, expected_runs=set(run_counts))
+        raise AssertionError('partial run set accepted')
+    except ValueError:
+        pass
 
 if __name__ == '__main__':
     test_full_path(); print('OK full path (36 scenarios, 24 events, 8 blocks)')

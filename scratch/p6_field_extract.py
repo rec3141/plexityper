@@ -184,11 +184,18 @@ def build_chem(raw, ctd, scen, sulfide_so4=0.0):
 
 
 # ---------------------------------------------------------------- event assembly
-def build_events(cds, run_counts, run_event, chem_by_event, scen, all_rows, sp, sulfide_so4=0.0):
+def build_events(cds, run_counts, run_event, chem_by_event, scen, all_rows, sp, sulfide_so4=0.0,
+                 expected_runs=None):
     """cds: {cds_id: dict(length, mag (None if unbinned), ko, euk(bool), marker_family or None)}
     mag_kos derived from cds. run_counts: {run: {'kind': 'DNA'|'RNA', 'counts': {cds: (frag, bp)}}}.
     run_event: {run: event_id}. chem_by_event: {event: (raw, ctd, block)}.
     Returns events for p6_scorer.Cohort: sample_id, cast_id (=block), O2_uM, N_panel, counts, probs."""
+    if expected_runs is not None:
+        # production: supplied runs must equal the 93-run manifest exactly, so a missing A/B
+        # library cannot yield a partial event (codex-plexi 251100396642549760)
+        got, exp = set(run_counts), set(expected_runs)
+        if got != exp or set(run_event) != exp:
+            raise ValueError(f'run set mismatch: missing {sorted(exp - got)[:5]}, extra {sorted(got - exp)[:5]}')
     prows = panel_rows(all_rows)
     pidx = {r['pathway_id']: i for i, r in enumerate(prows)}
     classify = make_classifier(all_rows, prows)

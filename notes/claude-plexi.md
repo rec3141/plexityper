@@ -37,9 +37,11 @@ Updated 2026-11-25 (chain resubmitted after 3 download failures). Resume from "A
     bound into the container, so samtools sort could not spill. Task 8 (SRR3724642, 235k
     spots) sorted in memory: its BAM is valid, 470678 reads = 2 x spots.
     - Fix: common.sh ab128628dd87 binds $SLURM_TMPDIR when set.
-  - **Current:** mapdna 6033745 (array 1-7,9-39 %10), then depths 6033746 (globs all
-    bam_dna/*.sorted.bam, including task 8), then mag 6033747.
-  - Watcher (local, 15-min polls) watches 6033745 and exits on any failure.
+  - mapdna 6033745: COMPLETED 38/38. All 39 BAMs + .bai present.
+    - flagstat primary = 2 x SRA spots for all 39 runs.
+    - Mapped: min 87.69%, median 96.69%, max 99.10%.
+  - **Current:** depths 6033746 RUNNING (started 2026-11-25T02:00), then mag 6033747 (pending).
+  - Watcher (local, 30-min polls) watches 6033746/47 and exits on any failure.
 - **After mag finishes:**
   1. Confirm SemiBin2/COMEBin/VAMB task logs exist in mag_work and show actual cuda training.
      Do NOT rely on GPU_GUARD_PASS alone (codex 251108400360243200).

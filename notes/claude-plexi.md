@@ -30,12 +30,12 @@ Updated 2026-11-25 (chain resubmitted after 3 download failures). Resume from "A
       The lock, .prf and .tmp were removed.
     - SRR3719367 and SRR3719449 (RNA, tasks 43 and 82): prefetch served **SRA Lite**
       (.sralite, simplified qualities), and the script only read .sra.
-    - Fix: p6_saanich_download.sh 24add63f0cd4 uses .sra or .sralite and logs the source.
+    - Fix: p6_saanich_download.sh 6c3af7d8c14c uses .sra or .sralite (explicit if/elif; the 24add63f0cd4 ls|head version failed under pipefail, codex 251217963302436864) and logs the source.
       Note the SRA Lite runs in the results (bbduk/strobealign do no quality trimming).
-  - **New:** dl task 4 6015859; dl RNA 43,82 6015860 (both 2 d).
-    mapdna 6015861 (afterok 6015859), then depths 6015862, then mag 6015863.
+  - **New:** dl task 4 6015941; dl RNA 43,82 6015942 (both 2 d; replace cancelled 6015859/60).
+    mapdna 6015861 (afterok 6015941), then depths 6015862, then mag 6015863.
     The RNA downloads are not in the DNA chain.
-  - Watcher bzo2tu1k9 (local, 30-min polls) watches 6015859/60/61 and exits on any failure.
+  - Watcher (local, 30-min polls) watches 6015941/42 + 6015861 and exits on any failure.
 - **After mag finishes:**
   1. Confirm SemiBin2/COMEBin/VAMB task logs exist in mag_work and show actual cuda training.
      Do NOT rely on GPU_GUARD_PASS alone (codex 251108400360243200).

@@ -18,8 +18,9 @@ echo "[INFO] $(date -Is) $(hostname) $RUN $KIND $LAYOUT spots=$SPOTS"
 prefetch --max-size 200G -O "$W/sra_cache" "$RUN"
 T=${SLURM_TMPDIR:-$W/tmp_$RUN}; mkdir -p "$T"
 # prefetch may serve SRA Lite (.sralite: simplified qualities) when full .sra is unavailable
-SRC=$(ls "$W/sra_cache/$RUN/$RUN.sra" "$W/sra_cache/$RUN/$RUN.sralite" 2>/dev/null | head -1)
-[ -n "$SRC" ] || { echo "[ERROR] no .sra/.sralite for $RUN" >&2; exit 1; }
+if [[ -s "$W/sra_cache/$RUN/$RUN.sra" ]]; then SRC="$W/sra_cache/$RUN/$RUN.sra"
+elif [[ -s "$W/sra_cache/$RUN/$RUN.sralite" ]]; then SRC="$W/sra_cache/$RUN/$RUN.sralite"
+else echo "[ERROR] no .sra/.sralite for $RUN" >&2; exit 1; fi
 echo "[INFO] source $(basename "$SRC")"
 fasterq-dump --split-3 --threads 4 --temp "$T" -O "$T" "$SRC"
 n=0

@@ -32,10 +32,14 @@ Updated 2026-11-25 (chain resubmitted after 3 download failures). Resume from "A
       (.sralite, simplified qualities), and the script only read .sra.
     - Fix: p6_saanich_download.sh 6c3af7d8c14c uses .sra or .sralite (explicit if/elif; the 24add63f0cd4 ls|head version failed under pipefail, codex 251217963302436864) and logs the source.
       Note the SRA Lite runs in the results (bbduk/strobealign do no quality trimming).
-  - **New:** dl task 4 6015941; dl RNA 43,82 6015942 (both 2 d; replace cancelled 6015859/60).
-    mapdna 6015861 (afterok 6015941), then depths 6015862, then mag 6015863.
-    The RNA downloads are not in the DNA chain.
-  - Watcher (local, 30-min polls) watches 6015941/42 + 6015861 and exits on any failure.
+  - Retry downloads 6015941 (task 4) and 6015942 (43, 82): COMPLETED. **All 93 runs downloaded.**
+  - mapdna 6015861: 38/39 FAILED in about 2 min. Cause: SLURM_TMPDIR (/localscratch) was not
+    bound into the container, so samtools sort could not spill. Task 8 (SRR3724642, 235k
+    spots) sorted in memory: its BAM is valid, 470678 reads = 2 x spots.
+    - Fix: common.sh ab128628dd87 binds $SLURM_TMPDIR when set.
+  - **Current:** mapdna 6033745 (array 1-7,9-39 %10), then depths 6033746 (globs all
+    bam_dna/*.sorted.bam, including task 8), then mag 6033747.
+  - Watcher (local, 15-min polls) watches 6033745 and exits on any failure.
 - **After mag finishes:**
   1. Confirm SemiBin2/COMEBin/VAMB task logs exist in mag_work and show actual cuda training.
      Do NOT rely on GPU_GUARD_PASS alone (codex 251108400360243200).

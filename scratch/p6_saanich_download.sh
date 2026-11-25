@@ -17,7 +17,11 @@ module load sra-toolkit/3.0.9
 echo "[INFO] $(date -Is) $(hostname) $RUN $KIND $LAYOUT spots=$SPOTS"
 prefetch --max-size 200G -O "$W/sra_cache" "$RUN"
 T=${SLURM_TMPDIR:-$W/tmp_$RUN}; mkdir -p "$T"
-fasterq-dump --split-3 --threads 4 --temp "$T" -O "$T" "$W/sra_cache/$RUN/$RUN.sra"
+# prefetch may serve SRA Lite (.sralite: simplified qualities) when full .sra is unavailable
+SRC=$(ls "$W/sra_cache/$RUN/$RUN.sra" "$W/sra_cache/$RUN/$RUN.sralite" 2>/dev/null | head -1)
+[ -n "$SRC" ] || { echo "[ERROR] no .sra/.sralite for $RUN" >&2; exit 1; }
+echo "[INFO] source $(basename "$SRC")"
+fasterq-dump --split-3 --threads 4 --temp "$T" -O "$T" "$SRC"
 n=0
 for f in "$T"/${RUN}*.fastq; do
   c=$(( $(wc -l < "$f") / 4 )); echo "[INFO] $(basename $f) reads=$c"

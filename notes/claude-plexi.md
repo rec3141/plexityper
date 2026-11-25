@@ -1,6 +1,6 @@
 # claude-plexi (Opus) state
 
-Updated 2026-11-24 evening, before compaction. Resume from "ACTIVE NOW".
+Updated 2026-11-25 (chain resubmitted after 3 download failures). Resume from "ACTIVE NOW".
 
 ## Who I am
 - Claude Code (Anthropic family) in grid's tmux session 8. Relay identity: **claude-plexi-2**.
@@ -22,25 +22,20 @@ Updated 2026-11-24 evening, before compaction. Resume from "ACTIVE NOW".
 - **Work dir:** `~/scratch/plexityper_saanich/` on Fir, containing common.sh, pool.sh, map_dna.sh,
   depths.sh, gpucheck.sh, mag.sh, dna_runs.txt, roster_runinfo.tsv, mgnify_contig_urls.tsv and
   logs/. Local copies are in scratch/fir_saanich/.
-- **Jobs:**
-  - MGnify contigs 5864186: DONE (39 files, 4.7 GB, mgnify_contigs/).
-  - SRA downloads (p6_saanich_download.sh writes reads/{dna,rna}/<RUN>*.fastq.gz plus a
-    <RUN>.done marker):
-    - 5859913 tasks 1-3, 5-7, 9-11 run with a 12 h limit; task 8 is done.
-    - Task 4 (SRR3724482, 13.3 GB) moved to **5868484** (2 d).
-    - Tasks 12-93 are **5868215** (2 d, %25).
-    - Rate is about 0.35–0.4 MB/s per stream. Task 11 (10.8 GB) is projected at ~9.2 h, so it
-      was kept.
-    - **If any task fails: resubmit it AND swap it into the mapdna dependency** (scontrol
-      update JobId=5865309 Dependency=...).
-  - Chain:
-    - gpucheck 5865307: PASS (cuda ×3 on an H100).
-    - pool 5865308, then mapdna 5865309 (array 1-39 %10).
-    - mapdna depends on pool + 5868215 + 5868484 + 5859913_{1-3,5-7,9-11}.
-    - Then depths 5865310.
-    - Then mag 5865424 (GPU h100, 48 c, 600 G, 3 d; mag.sh 8d186887910d). It runs on-node
-      torch probes and greps task logs for 'training on CPU'.
-  - Watcher bhy38t75k (local background, 30-min polls) watches the three download jobs.
+- **Jobs (resubmitted 2026-11-25):**
+  - MGnify contigs 5864186 DONE; pool 5865308 DONE; gpucheck 5865307 PASS (cuda x3, H100).
+  - First download wave: 90/93 runs .done. 3 failed, so the old chain (5865309/10, 5865424)
+    was cancelled by SLURM.
+    - SRR3724482 (DNA, task 4) failed on a stale prefetch lock left by cancelled 5859913_4.
+      The lock, .prf and .tmp were removed.
+    - SRR3719367 and SRR3719449 (RNA, tasks 43 and 82): prefetch served **SRA Lite**
+      (.sralite, simplified qualities), and the script only read .sra.
+    - Fix: p6_saanich_download.sh 24add63f0cd4 uses .sra or .sralite and logs the source.
+      Note the SRA Lite runs in the results (bbduk/strobealign do no quality trimming).
+  - **New:** dl task 4 6015859; dl RNA 43,82 6015860 (both 2 d).
+    mapdna 6015861 (afterok 6015859), then depths 6015862, then mag 6015863.
+    The RNA downloads are not in the DNA chain.
+  - Watcher bzo2tu1k9 (local, 30-min polls) watches 6015859/60/61 and exits on any failure.
 - **After mag finishes:**
   1. Confirm SemiBin2/COMEBin/VAMB task logs exist in mag_work and show actual cuda training.
      Do NOT rely on GPU_GUARD_PASS alone (codex 251108400360243200).
